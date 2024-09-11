@@ -1,4 +1,4 @@
-drFROM azul/zulu-openjdk:17
+FROM azul/zulu-openjdk:17
 ADD build/libs/whereToLive-0.0.1-SNAPSHOT.jar whereToLive-SNAPSHOT.jar
 EXPOSE  8080
 
@@ -12,4 +12,4 @@ EXPOSE  8080
 
 RUN mkdir -p /heap_dumps
 ENV JAVA_OPTS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/heap_dumps/heapdump.hprof -Xlog:gc*:file=/var/log/gc.log"
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /costCalculrator-0.0.1-SNAPSHOT.jar"]re
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /costCalculrator-0.0.1-SNAPSHOT.jar"]

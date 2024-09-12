@@ -1,5 +1,5 @@
 FROM azul/zulu-openjdk:17
-ADD build/libs/whereToLive-0.0.1-SNAPSHOT.jar whereToLive-SNAPSHOT.jar
+ADD build/libs/whereToLive-0.0.1-SNAPSHOT.jar whereToLive-0.0.1-SNAPSHOT.jar
 EXPOSE  8080
 
 # 환경 변수로 Java 옵션 설정
@@ -12,4 +12,4 @@ EXPOSE  8080
 
 RUN mkdir -p /heap_dumps
 ENV JAVA_OPTS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/heap_dumps/heapdump.hprof -Xlog:gc*:file=/var/log/gc.log"
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /costCalculrator-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /whereToLive-0.0.1-SNAPSHOT.jar"]

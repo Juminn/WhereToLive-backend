@@ -1,9 +1,10 @@
-package com.enm.whereToLive.Service.impl;
+package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.Data.Station;
-import com.enm.whereToLive.Service.StationService;
-import com.enm.whereToLive.Service.WhereToLiveService;
-import com.enm.whereToLive.Service.dabang.DabangService;
+import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.service.StationService;
+import com.enm.whereToLive.service.WhereToLiveService;
+import com.enm.whereToLive.service.dabang.DabangService;
+import com.enm.whereToLive.service.whenToGo.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,11 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
     private StationService stationService;
     private DabangService dabangService;
-    private com.enm.whereToLive.Service.whenToGo.WhenToGoService whenToGoService;
+    private WhenToGoService whenToGoService;
+   // private
 
     @Autowired
-    public WhereToLiveServiceImpl(StationService stationService, DabangService dabangService, com.enm.whereToLive.Service.whenToGo.WhenToGoService whenToGoService) {
+    public WhereToLiveServiceImpl(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;
@@ -29,5 +31,10 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
         ArrayList<Station> stations= stationService.getStationsByDeparture(destination);
 
         return stations;
+    }
+
+    @Override
+    public void test() {
+
     }
 }

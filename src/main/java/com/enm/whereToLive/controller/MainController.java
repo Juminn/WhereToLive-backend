@@ -1,9 +1,9 @@
-package com.enm.whereToLive.Controller;
+package com.enm.whereToLive.controller;
 
-import com.enm.whereToLive.Data.Destination;
-import com.enm.whereToLive.Data.Station;
-import com.enm.whereToLive.Service.BatchService;
-import com.enm.whereToLive.Service.WhereToLiveService;
+import com.enm.whereToLive.data.Destination;
+import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.service.BatchService;
+import com.enm.whereToLive.service.WhereToLiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +23,14 @@ public class MainController {
     }
 
     @GetMapping("/")
+    public ArrayList<Station> index() throws Exception {
+
+        whereToLiveService.test();
+
+        return null;
+    }
+
+    @GetMapping("/test")
     public ArrayList<Station> test() throws Exception {
 
         String companyName = "현대오토에버";

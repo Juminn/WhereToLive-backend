@@ -1,4 +1,4 @@
-package com.enm.whereToLive.Data.dabang;
+package com.enm.whereToLive.data.dabang;
 
 public class Rental {
     private int deposit;

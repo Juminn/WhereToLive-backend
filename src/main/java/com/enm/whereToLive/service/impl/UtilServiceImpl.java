@@ -1,6 +1,6 @@
-package com.enm.whereToLive.Service.impl;
+package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.Service.dabang.UtilService;
+import com.enm.whereToLive.service.dabang.UtilService;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,4 +1,4 @@
-package com.enm.whereToLive.Service.dabang;
+package com.enm.whereToLive.service.dabang;
 
 public interface UtilService {
     public String calculateBBox(double originalLat, double originalLng);

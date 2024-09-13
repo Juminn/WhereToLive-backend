@@ -1,12 +1,11 @@
-package com.enm.whereToLive.Service;
+package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.Data.Station;
+import com.enm.whereToLive.data.Station;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 //임시DB

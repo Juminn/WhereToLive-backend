@@ -24,6 +24,12 @@ repositories {
 }
 
 dependencies {
+	//AWS DynamoDB
+	implementation 'io.github.boostchicken:spring-data-dynamodb:5.2.5'
+	//스프링 3.버전이라 사설 SPiring Dynmodb가 jakson버전이 에러나는거같아서 이렇게처리
+	//implementation platform('software.amazon.awssdk:bom:2.20.56')
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.0'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

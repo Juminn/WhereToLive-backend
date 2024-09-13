@@ -1,4 +1,4 @@
-package com.enm.whereToLive.Data.whenToGo;
+package com.enm.whereToLive.data.whenToGo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

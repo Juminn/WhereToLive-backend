@@ -1,10 +1,10 @@
-package com.enm.whereToLive.Service.whenToGo;
+package com.enm.whereToLive.service.whenToGo;
 
-import com.enm.whereToLive.Data.Destination;
-import com.enm.whereToLive.Data.GoingWorkDTO;
-import com.enm.whereToLive.Data.Station;
-import com.enm.whereToLive.Data.whenToGo.WhenToGoRequestDTO;
-import com.enm.whereToLive.Data.whenToGo.WhenToGoResponseDTO;
+import com.enm.whereToLive.data.Destination;
+import com.enm.whereToLive.data.GoingWorkDTO;
+import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.data.whenToGo.WhenToGoRequestDTO;
+import com.enm.whereToLive.data.whenToGo.WhenToGoResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

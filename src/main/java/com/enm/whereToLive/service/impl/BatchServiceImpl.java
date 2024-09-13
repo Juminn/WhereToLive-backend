@@ -1,11 +1,11 @@
-package com.enm.whereToLive.Service.impl;
+package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.Data.Destination;
-import com.enm.whereToLive.Data.GoingWorkDTO;
-import com.enm.whereToLive.Data.Station;
-import com.enm.whereToLive.Service.StationService;
-import com.enm.whereToLive.Service.BatchService;
-import com.enm.whereToLive.Service.dabang.DabangService;
+import com.enm.whereToLive.data.Destination;
+import com.enm.whereToLive.data.GoingWorkDTO;
+import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.service.StationService;
+import com.enm.whereToLive.service.BatchService;
+import com.enm.whereToLive.service.dabang.DabangService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,10 +16,10 @@ public class BatchServiceImpl implements BatchService {
 
     private StationService stationService;
     private DabangService dabangService;
-    private com.enm.whereToLive.Service.whenToGo.WhenToGoService whenToGoService;
+    private com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService;
 
     @Autowired
-    public BatchServiceImpl(StationService stationService, DabangService dabangService, com.enm.whereToLive.Service.whenToGo.WhenToGoService whenToGoService) {
+    public BatchServiceImpl(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;

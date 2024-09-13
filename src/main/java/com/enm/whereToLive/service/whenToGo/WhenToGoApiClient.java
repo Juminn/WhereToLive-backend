@@ -1,19 +1,12 @@
-package com.enm.whereToLive.Service.whenToGo;
+package com.enm.whereToLive.service.whenToGo;
 
-import com.enm.whereToLive.Data.dabang.DabangResponse;
-import com.enm.whereToLive.Data.whenToGo.WhenToGoRequestDTO;
-import com.enm.whereToLive.Data.whenToGo.WhenToGoResponseDTO;
-import com.enm.whereToLive.Service.dabang.UtilService;
+import com.enm.whereToLive.data.whenToGo.WhenToGoRequestDTO;
+import com.enm.whereToLive.data.whenToGo.WhenToGoResponseDTO;
+import com.enm.whereToLive.service.dabang.UtilService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Service
 public class WhenToGoApiClient {

@@ -1,10 +1,10 @@
-package com.enm.whereToLive.Service.dabang;
+package com.enm.whereToLive.service.dabang;
 
-import com.enm.whereToLive.Data.Station;
-import com.enm.whereToLive.Data.dabang.AveragePrice;
-import com.enm.whereToLive.Data.dabang.DabangResponse;
-import com.enm.whereToLive.Data.dabang.Rental;
-import com.enm.whereToLive.Data.dabang.SubwayStation;
+import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.data.dabang.AveragePrice;
+import com.enm.whereToLive.data.dabang.DabangResponse;
+import com.enm.whereToLive.data.dabang.Rental;
+import com.enm.whereToLive.data.dabang.SubwayStation;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -7,16 +7,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-@Setter
-@Getter
+
 @AllArgsConstructor
 @NoArgsConstructor
-@DynamoDBTable(tableName = "LivingOpportunity")
+@DynamoDBTable(tableName = "test2")
 public class LivingOpportunity {
 
-    @DynamoDBHashKey
-    private String destination;
-    @DynamoDBAttribute
-    private String stationId;
+    @Id
+    private LivingOpportunityId id; // 복합 키를 위한 ID 클래스
 
+    @DynamoDBHashKey(attributeName = "test")
+    public String getTest() {
+        return this.id.getTest();
+    }
+
+    public void setTest(String test) {
+        this.id.setTest(test);
+    }
+
+    @DynamoDBRangeKey(attributeName = "tests")
+    public String getTests() {
+        return this.id.getTests();
+    }
+
+    public void setTests(String tests) {
+        this.id.setTests(tests);
+    }
 }

@@ -36,12 +36,4 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
         return stations;
     }
-
-    @Override
-    public void test() {
-        LivingOpportunity livingOpportunity = new LivingOpportunity(new LivingOpportunityId("카카오", "카카오3"));
-
-        livingOpportunityRepository.save(livingOpportunity);
-        System.out.println("complete");
-    }
 }

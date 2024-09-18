@@ -7,6 +7,4 @@ import java.util.ArrayList;
 public interface WhereToLiveService {
 
     ArrayList<Station> getStationsOpportunity(String destination) throws Exception;
-    void test();
-
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Destination {
+    String name;
     Double lat;
     Double lng;
 }

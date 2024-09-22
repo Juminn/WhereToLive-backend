@@ -1,8 +1,6 @@
 package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.data.Station;
 import com.enm.whereToLive.data.entity.LivingOpportunity;
-import com.enm.whereToLive.data.entity.LivingOpportunityId;
 import com.enm.whereToLive.data.repository.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.WhereToLiveService;
@@ -11,7 +9,7 @@ import com.enm.whereToLive.service.whenToGo.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class WhereToLiveServiceImpl implements WhereToLiveService {
@@ -31,9 +29,9 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
 
     @Override
-    public ArrayList<Station> getStationsOpportunity(String destination) throws Exception {
-        ArrayList<Station> stations= stationService.getStationsByDeparture(destination);
+    public List<LivingOpportunity> getPlaceOpportunity(String destination) {
+        //ArrayList<Station> stations= stationService.getStationsByDeparture(destination);
 
-        return stations;
+        return livingOpportunityRepository.findByDestination(destination);
     }
 }

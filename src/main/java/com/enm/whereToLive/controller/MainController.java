@@ -2,15 +2,18 @@ package com.enm.whereToLive.controller;
 
 import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.service.BatchService;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 public class MainController {
@@ -28,7 +31,7 @@ public class MainController {
         this.stationService = stationService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public String index() throws Exception {
         //batchService.getStationsRental(stationService.getAllStations())
         testService.test();
@@ -36,13 +39,10 @@ public class MainController {
         return null;
     }
 
-    @GetMapping("/test")
-    public ArrayList<Station> test() throws Exception {
-
-        String companyName = "현대오토에버";
-
-        return whereToLiveService.getStationsOpportunity(companyName);
-
+    @GetMapping("/opportunity")
+    public List<LivingOpportunity> opportunity(@RequestParam String companyName) throws Exception {
+        
+        return whereToLiveService.getPlaceOpportunity(companyName);
     }
 
     @GetMapping("/batch")

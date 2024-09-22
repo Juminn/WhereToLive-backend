@@ -35,13 +35,13 @@ public class BatchServiceImpl implements BatchService {
         ArrayList<Station> stationList = stationService.getAllStations();
 
         //String stationsRental = getStationsRental(stationList);
-        makeStationsTotalOpportunity(stationList, destination, "test");
+        makeStationsTotalOpportunity(stationList, destination);
 
         return stationList;
 
     }
 
-    public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination, String destinationName){
+    public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination){
         ArrayList<LivingOpportunity> livingOpportunities = new ArrayList<>();
 
         for(Station station:stationList) {
@@ -61,12 +61,12 @@ public class BatchServiceImpl implements BatchService {
 
                 //test
                 LivingOpportunity livingOpportunity = new LivingOpportunity();
-                livingOpportunity.setDestination(destinationName);
+                livingOpportunity.setDestination(destination.getName());
                 livingOpportunity.setStationID(station.getId());
                 livingOpportunity.setTotalOpportunityCost(monthlyTotalOpportunity);
                 livingOpportunity.setCommuteCost(monthlyGoingWorkOpportunity);
                 livingOpportunity.setCommuteTime(goingWorkDTO.getDuration());
-                livingOpportunity.setStationID(station.getId());
+                livingOpportunity.setStationName(station.getName());
                 livingOpportunity.setLine(station.getLine());
                 livingOpportunity.setLatitude(destination.getLat());
                 livingOpportunity.setLongitude(destination.getLng());
@@ -81,8 +81,8 @@ public class BatchServiceImpl implements BatchService {
 
             }
 
-            livingOpportunityRepository.saveAll(livingOpportunities);
         }
+        livingOpportunityRepository.saveAll(livingOpportunities);
     }
 
     public ArrayList<Station> batchMakeOpportunityDemo(Destination destination) throws Exception {

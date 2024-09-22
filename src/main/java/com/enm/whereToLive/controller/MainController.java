@@ -31,8 +31,16 @@ public class MainController {
         this.stationService = stationService;
     }
 
-    @GetMapping("/test")
+    @GetMapping("/")
     public String index() throws Exception {
+        //batchService.getStationsRental(stationService.getAllStations())
+        testService.test();
+
+        return "healthCheck";
+    }
+
+    @GetMapping("/test")
+    public String test() throws Exception {
         //batchService.getStationsRental(stationService.getAllStations())
         testService.test();
 

@@ -46,9 +46,9 @@ public class MainController {
     }
 
     @GetMapping("/opportunity")
-    public List<LivingOpportunity> opportunity(@RequestParam String companyName) throws Exception {
+    public List<LivingOpportunity> opportunity(@RequestParam String company, @RequestParam int workdays) throws Exception {
         
-        return whereToLiveService.getPlaceOpportunity(companyName);
+        return whereToLiveService.getPlaceOpportunity(company, workdays);
     }
 
     @GetMapping("/batch")

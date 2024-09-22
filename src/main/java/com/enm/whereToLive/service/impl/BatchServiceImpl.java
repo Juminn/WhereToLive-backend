@@ -53,7 +53,8 @@ public class BatchServiceImpl implements BatchService {
                 int monthlyRent = station.getMontlyRent().intValue();
                 int monthlyTotalOpportunity = monthlyGoingWorkOpportunity + monthlyRent;
 
-                System.out.println("totalOpportunity: " + monthlyTotalOpportunity +
+                System.out.println("stationID: " + station.getId() +
+                        "totalOpportunity: " + monthlyTotalOpportunity +
                         " monthlyGoingWorkOpportunity: " + monthlyGoingWorkOpportunity +
                         " monthlyRent: " + monthlyRent +
                         " goingWorkMinute: " + goingWorkDTO.getDuration()
@@ -72,6 +73,9 @@ public class BatchServiceImpl implements BatchService {
                 livingOpportunity.setLongitude(destination.getLng());
                 livingOpportunity.setRentCost(monthlyRent);
 
+                //임시
+                livingOpportunityRepository.save(livingOpportunity);
+
                 livingOpportunities.add(livingOpportunity);
             }
             else{
@@ -82,7 +86,7 @@ public class BatchServiceImpl implements BatchService {
             }
 
         }
-        livingOpportunityRepository.saveAll(livingOpportunities);
+        //livingOpportunityRepository.saveAll(livingOpportunities);
     }
 
     public ArrayList<Station> batchMakeOpportunityDemo(Destination destination) throws Exception {

@@ -25,15 +25,11 @@ public class WebConfig implements WebMvcConfigurer {
                         "https://www.d1y6ebwgoivo5n.cloudfront.net",
                         "http://www.d1y6ebwgoivo5n.cloudfront.net",
 
-                        "https://xn--ih3bt9oq0b6yi50k.com",
-                        "http://xn--ih3bt9oq0b6yi50k.com",
-                        "https://www.xn--ih3bt9oq0b6yi50k.com",
-                        "http://www.xn--ih3bt9oq0b6yi50k.com",
+                        "https://xn--hl0bp2k97kmsecuco0oo8m.com",
+                        "http://xn--hl0bp2k97kmsecuco0oo8m.com",
+                        "https://www.xn--hl0bp2k97kmsecuco0oo8m.com",
+                        "http://www.xn--hl0bp2k97kmsecuco0oo8m.com"
 
-                        "https://xn--w39a06bmycv8qzokvne.com",
-                        "http://xn--w39a06bmycv8qzokvne.com",
-                        "https://www.xn--w39a06bmycv8qzokvne.com",
-                        "http://www.xn--w39a06bmycv8qzokvne.com"
                 );
     }
 

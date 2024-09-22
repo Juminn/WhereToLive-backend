@@ -1,6 +1,6 @@
 package com.enm.whereToLive.config;
 
-/*
+
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableDynamoDBRepositories(basePackages = "com.enm.costcalculrator.data.repository")
+@EnableDynamoDBRepositories(basePackages = "com.enm.whereToLive.data.repository")
 public class DynamoDBConfig {
 
     @Value("${aws.accessKey}")
@@ -37,5 +37,3 @@ public class DynamoDBConfig {
                 .withRegion(awsRegion).build();
     }
 }
-
- */

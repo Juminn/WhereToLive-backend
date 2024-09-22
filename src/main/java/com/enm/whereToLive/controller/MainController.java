@@ -32,9 +32,7 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String index() throws Exception {
-        //batchService.getStationsRental(stationService.getAllStations())
-        testService.test();
+    public String index(){
 
         return "healthCheck";
     }

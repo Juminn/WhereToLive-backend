@@ -1,7 +1,7 @@
 package com.enm.whereToLive.service.impl;
 
 import com.enm.whereToLive.data.entity.LivingOpportunity;
-import com.enm.whereToLive.data.repository.LivingOpportunityRepository;
+import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import com.enm.whereToLive.service.dabang.DabangService;

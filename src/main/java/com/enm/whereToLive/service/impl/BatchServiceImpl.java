@@ -4,7 +4,7 @@ import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.GoingWorkDTO;
 import com.enm.whereToLive.data.Station;
 import com.enm.whereToLive.data.entity.LivingOpportunity;
-import com.enm.whereToLive.data.repository.LivingOpportunityRepository;
+import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.BatchService;
 import com.enm.whereToLive.service.dabang.DabangService;
@@ -12,7 +12,6 @@ import com.enm.whereToLive.service.whenToGo.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Service

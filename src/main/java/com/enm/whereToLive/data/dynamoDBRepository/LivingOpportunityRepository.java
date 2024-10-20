@@ -1,4 +1,4 @@
-package com.enm.whereToLive.data.repository;
+package com.enm.whereToLive.data.dynamoDBRepository;
 
 import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.data.entity.LivingOpportunityId;

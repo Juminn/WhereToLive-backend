@@ -1,10 +1,10 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.data.entity.LivingOpportunity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface WhereToLiveService {
 
-    ArrayList<Station> getStationsOpportunity(String destination) throws Exception;
+    List<LivingOpportunity> getPlaceOpportunity(String destination, int workDays) throws Exception;
 }

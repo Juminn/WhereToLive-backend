@@ -46,7 +46,7 @@ public class ClusterService {
 
     // 초기 클러스터 생성
     private void generateInitialClusters() {
-        int gridSize = 4; // 4x4 그리드
+        int gridSize = 1; // 4x4 그리드
         double latStep = (LAT_MAX - LAT_MIN) / gridSize;
         double lonStep = (LON_MAX - LON_MIN) / gridSize;
 
@@ -60,6 +60,7 @@ public class ClusterService {
                 double maxLon = minLon + lonStep;
 
                 long clusterId = computeMortonCode(row, col, 2); // 2비트씩 사용 (4x4 그리드)
+                //clusterId = 1;
 
                 Cluster cluster = new Cluster();
                 cluster.setId(clusterId);
@@ -144,6 +145,16 @@ public class ClusterService {
             double subMaxLon = (i % 2 == 0) ? midLon : maxLon;
 
             long subClusterId = (parentCluster.getId() << 2) | i;
+
+
+            // 자식 클러스터의 상대적인 위치 (x, y)
+            int x = i % 2;
+            int y = i / 2;
+            // 자식 클러스터의 Morton 코드 계산
+            long subMortonCode = computeMortonCode(x, y, 1);
+            // 부모 클러스터의 ID를 왼쪽으로 2비트 시프트하고 자식의 Morton 코드 추가
+             subClusterId = (parentCluster.getId() << 2) | subMortonCode;
+
 
             Cluster subCluster = new Cluster();
             subCluster.setId(subClusterId);

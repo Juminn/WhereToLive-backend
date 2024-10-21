@@ -1,10 +1,12 @@
 package com.enm.whereToLive.data.repository;
 
 import com.enm.whereToLive.data.cluster.Cluster;
+import com.enm.whereToLive.data.cluster.ClusterStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ClusterRepository extends JpaRepository<Cluster, Long> {
@@ -16,4 +18,8 @@ public interface ClusterRepository extends JpaRepository<Cluster, Long> {
     // 오늘 생성된 클러스터 가져오기
     @Query("SELECT c FROM Cluster c WHERE c.createdAt >= CURRENT_DATE")
     List<Cluster> findClustersCreatedToday();
+
+    List<Cluster> findByStatusOrderByLevelAsc(ClusterStatus status);
+
+    Optional<Cluster> findFirstByStatus(ClusterStatus status);
 }

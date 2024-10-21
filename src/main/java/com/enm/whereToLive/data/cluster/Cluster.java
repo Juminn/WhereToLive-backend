@@ -1,8 +1,6 @@
 package com.enm.whereToLive.data.cluster;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,6 +30,12 @@ public class Cluster {
 
     // 생성 날짜
     private LocalDateTime createdAt;
+
+    //완료 날짜
+    private LocalDateTime completeAt;
+
+    @Enumerated(EnumType.STRING)
+    private ClusterStatus status;
 
     // 기회 비용
     private Double opportunityCost;

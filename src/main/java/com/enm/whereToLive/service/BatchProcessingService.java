@@ -4,16 +4,23 @@ import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.GoingWorkDTO;
 import com.enm.whereToLive.data.Station;
 import com.enm.whereToLive.data.cluster.Cluster;
+import com.enm.whereToLive.data.cluster.ClusterStatus;
+import com.enm.whereToLive.data.cluster.LivingOpportunity2;
+import com.enm.whereToLive.data.cluster.LivingOpportunityId2;
 import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.data.repository.ClusterRepository;
+import com.enm.whereToLive.data.repository.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.whenToGo.WhenToGoService;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BatchProcessingService {
@@ -25,32 +32,49 @@ public class BatchProcessingService {
     private ClusterRepository clusterRepository;
 
     @Autowired
+    private LivingOpportunityRepository2 livingOpportunityRepository2;
+
+    @Autowired
     private WhenToGoService whenToGoService;
 
     @Autowired
     private StationService stationService;
 
+    private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
+
     // 매일 자정에 실행
     //@Scheduled(cron = "0 0 0 * * *")
     @PostConstruct
     public void processDailyClusters() throws Exception {
-        int dailyLimit = 16;
 
-        // 1. 클러스터 분할 및 생성
-        clusterService.generateDailyClusters(dailyLimit);
+        while (true) {
+            // 대기중인 클러스터 가져오기
+            Optional<Cluster> optionalNewCluster = clusterRepository.findFirstByStatus(ClusterStatus.PENDING);
+            Cluster newCluster;
 
-        // 2. 오늘 생성된 클러스터 가져오기
-        List<Cluster> newClusters = clusterRepository.findClustersCreatedToday();
+            if (optionalNewCluster.isEmpty()){
+                logger.info("No PENDING Cluster, so Generate Cluster");
 
-        // 3. 기회 비용 계산 및 저장
-        for (Cluster cluster : newClusters) {
-            double centerLat = (cluster.getMinLatitude() + cluster.getMaxLatitude()) / 2;
-            double centerLon = (cluster.getMinLongitude() + cluster.getMaxLongitude()) / 2;
+                // 클러스터 분할 및 생성
+                clusterService.generateDailyClusters();
+                continue;
+            }
+            else {
+                newCluster = optionalNewCluster.get();
+            }
 
-            Destination destination = new Destination(cluster.getId().toString(), centerLat, centerLon );
-            batchMakeOpportunity(destination);
+            // 3. 기회 비용 계산 및 저장
+            newCluster.setStatus(ClusterStatus.PROCESSING);
+            clusterRepository.save(newCluster);
 
-            clusterRepository.save(cluster);
+            double centerLat = (newCluster.getMinLatitude() + newCluster.getMaxLatitude()) / 2;
+            double centerLon = (newCluster.getMinLongitude() + newCluster.getMaxLongitude()) / 2;
+
+            Destination destination = new Destination(newCluster.getId().toString(), centerLat, centerLon);
+            //batchMakeOpportunity(destination);
+
+            newCluster.setStatus(ClusterStatus.CAL_COMPLETED);
+            clusterRepository.save(newCluster);
         }
     }
 
@@ -84,9 +108,13 @@ public class BatchProcessingService {
                 );
 
                 //test
-                LivingOpportunity livingOpportunity = new LivingOpportunity();
-                livingOpportunity.setDestination(destination.getName());
-                livingOpportunity.setStationID(station.getId());
+                LivingOpportunity2 livingOpportunity = new LivingOpportunity2();
+
+                LivingOpportunityId2 livingOpportunityId = new LivingOpportunityId2();
+                livingOpportunityId.setDestination(destination.getName());
+                livingOpportunityId.setStationId(station.getId());
+
+                livingOpportunity.setId(livingOpportunityId);
                 livingOpportunity.setTotalOpportunityCost(monthlyTotalOpportunity);
                 livingOpportunity.setCommuteCost(monthlyGoingWorkOpportunity);
                 livingOpportunity.setCommuteTime(goingWorkDTO.getDuration());
@@ -97,6 +125,7 @@ public class BatchProcessingService {
                 livingOpportunity.setRentCost(monthlyRent);
 
                 //DB저장 코드필요
+                livingOpportunityRepository2.save(livingOpportunity);
             }
             else{
                 System.out.println(

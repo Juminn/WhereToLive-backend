@@ -4,8 +4,11 @@ package com.enm.whereToLive.service;
 //import com.example.seoulclusters.model.NotFoundException;
 //import com.example.seoulclusters.repository.ClusterRepository;
 import com.enm.whereToLive.data.cluster.Cluster;
+import com.enm.whereToLive.data.cluster.ClusterStatus;
 import com.enm.whereToLive.data.repository.ClusterRepository;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ public class ClusterService {
 
     @Autowired
     private ClusterRepository clusterRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
 
     // 서울의 위도와 경도 범위
     private static final double LAT_MIN = 37.413294;
@@ -34,6 +39,9 @@ public class ClusterService {
         if (clusterRepository.count() == 0) {
             generateInitialClusters();
         }
+
+        List<Cluster> pendingClusters = clusterRepository.findByStatusOrderByLevelAsc(ClusterStatus.PENDING);
+        //clusterQueue.addAll(pendingClusters);
     }
 
     // 초기 클러스터 생성
@@ -60,6 +68,7 @@ public class ClusterService {
                 cluster.setMaxLatitude(maxLat);
                 cluster.setMinLongitude(minLon);
                 cluster.setMaxLongitude(maxLon);
+                cluster.setStatus(ClusterStatus.PENDING);
                 cluster.setCreatedAt(LocalDateTime.now());
 
                 clusters.add(cluster);
@@ -69,7 +78,7 @@ public class ClusterService {
         clusterRepository.saveAll(clusters);
 
         // 분할 큐에 초기 클러스터 추가
-        clusterQueue.addAll(clusters);
+        //clusterQueue.addAll(clusters);
     }
 
     // Morton 코드 계산 (Z-order curve)
@@ -83,30 +92,30 @@ public class ClusterService {
     }
 
     // 매일 호출되는 클러스터 분할 메소드
-    public void generateDailyClusters(int dailyLimit) {
+    public void generateDailyClusters() {
         List<Cluster> newClusters = new ArrayList<>();
 
-        int clustersToProcess = dailyLimit;
-        while (clustersToProcess > 0 && !clusterQueue.isEmpty()) {
-            Cluster parentCluster = clusterQueue.poll();
+        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatus(ClusterStatus.CAL_COMPLETED);
+        Cluster parentCluster;
 
-            // 최대 수준에 도달했으면 건너뜁니다.
-            if (parentCluster.getLevel() >= getMaxLevel()) {
-                continue;
-            }
-
-            // 클러스터 분할
-            List<Cluster> subClusters = splitCluster(parentCluster);
-            newClusters.addAll(subClusters);
-
-            // 분할된 클러스터를 큐에 추가
-            clusterQueue.addAll(subClusters);
-
-            clustersToProcess--;
+        if (optionalParentCluster.isEmpty()){
+            logger.error("No CAL_COMPLETED Cluster");
+            return;
         }
+        else {
+            parentCluster = optionalParentCluster.get();
+        }
+
+        // 클러스터 분할
+        List<Cluster> subClusters = splitCluster(parentCluster);
+        newClusters.addAll(subClusters);
 
         // 새로운 클러스터를 저장
         clusterRepository.saveAll(newClusters);
+
+        // 부모 클러스터
+        parentCluster.setStatus(ClusterStatus.SPLIT_COMPLETED);
+        clusterRepository.save(parentCluster);
     }
 
     // 최대 분할 수준 설정 (필요에 따라 조정)
@@ -143,6 +152,7 @@ public class ClusterService {
             subCluster.setMaxLatitude(subMaxLat);
             subCluster.setMinLongitude(subMinLon);
             subCluster.setMaxLongitude(subMaxLon);
+            subCluster.setStatus(ClusterStatus.PENDING);
             subCluster.setParentId(parentCluster.getId());
             subCluster.setCreatedAt(LocalDateTime.now());
 

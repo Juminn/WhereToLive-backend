@@ -52,8 +52,10 @@ public class BatchServiceImpl implements BatchService {
                 int monthlyRent = station.getMontlyRent().intValue();
                 int monthlyTotalOpportunity = monthlyGoingWorkOpportunity + monthlyRent;
 
-                System.out.println("stationID: " + station.getId() +
-                        "totalOpportunity: " + monthlyTotalOpportunity +
+                System.out.println(
+                        "stationID: " + station.getId() +
+                        " Destination: " + destination.getName() +
+                        " totalOpportunity: " + monthlyTotalOpportunity +
                         " monthlyGoingWorkOpportunity: " + monthlyGoingWorkOpportunity +
                         " monthlyRent: " + monthlyRent +
                         " goingWorkMinute: " + goingWorkDTO.getDuration()

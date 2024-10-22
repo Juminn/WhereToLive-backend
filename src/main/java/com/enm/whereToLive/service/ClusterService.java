@@ -3,6 +3,7 @@ package com.enm.whereToLive.service;
 //import com.example.seoulclusters.model.Cluster;
 //import com.example.seoulclusters.model.NotFoundException;
 //import com.example.seoulclusters.repository.ClusterRepository;
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.enm.whereToLive.data.cluster.Cluster;
 import com.enm.whereToLive.data.cluster.ClusterStatus;
 import com.enm.whereToLive.data.repository.ClusterRepository;
@@ -21,6 +22,8 @@ public class ClusterService {
 
     @Autowired
     private ClusterRepository clusterRepository;
+
+    private static final int MAX_LEVEL = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
 
@@ -46,7 +49,7 @@ public class ClusterService {
 
     // 초기 클러스터 생성
     private void generateInitialClusters() {
-        int gridSize = 1; // 4x4 그리드
+        int gridSize = 2; // 4x4 그리드
         double latStep = (LAT_MAX - LAT_MIN) / gridSize;
         double lonStep = (LON_MAX - LON_MIN) / gridSize;
 
@@ -59,7 +62,8 @@ public class ClusterService {
                 double minLon = LON_MIN + col * lonStep;
                 double maxLon = minLon + lonStep;
 
-                long clusterId = computeMortonCode(row, col, 2); // 2비트씩 사용 (4x4 그리드)
+                String clusterId = generateClusterId(null, row * gridSize + col);
+                //long clusterId = computeMortonCode(row, col, 2); // 2비트씩 사용 (4x4 그리드)
                 //clusterId = 1;
 
                 Cluster cluster = new Cluster();
@@ -82,6 +86,14 @@ public class ClusterService {
         //clusterQueue.addAll(clusters);
     }
 
+    private String generateClusterId(String parentId, int index) {
+        if (parentId == null || parentId.isEmpty()) {
+            return String.valueOf(index);
+        } else {
+            return parentId + "-" + index;
+        }
+    }
+
     // Morton 코드 계산 (Z-order curve)
     private long computeMortonCode(int x, int y, int bits) {
         long mortonCode = 0;
@@ -96,7 +108,7 @@ public class ClusterService {
     public void generateDailyClusters() {
         List<Cluster> newClusters = new ArrayList<>();
 
-        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatus(ClusterStatus.CAL_COMPLETED);
+        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatusOOrderByLevelAsc(ClusterStatus.CAL_COMPLETED);
         Cluster parentCluster;
 
         if (optionalParentCluster.isEmpty()){
@@ -144,7 +156,8 @@ public class ClusterService {
             double subMinLon = (i % 2 == 0) ? minLon : midLon;
             double subMaxLon = (i % 2 == 0) ? midLon : maxLon;
 
-            long subClusterId = (parentCluster.getId() << 2) | i;
+            String subClusterId = generateClusterId(parentCluster.getId(), i);
+            //long subClusterId = (parentCluster.getId() << 2) | i;
 
 
             // 자식 클러스터의 상대적인 위치 (x, y)
@@ -153,8 +166,7 @@ public class ClusterService {
             // 자식 클러스터의 Morton 코드 계산
             long subMortonCode = computeMortonCode(x, y, 1);
             // 부모 클러스터의 ID를 왼쪽으로 2비트 시프트하고 자식의 Morton 코드 추가
-             subClusterId = (parentCluster.getId() << 2) | subMortonCode;
-
+             //subClusterId = (parentCluster.getId() << 2) | subMortonCode;
 
             Cluster subCluster = new Cluster();
             subCluster.setId(subClusterId);
@@ -173,9 +185,23 @@ public class ClusterService {
         return subClusters;
     }
 
-    // 좌표로 클러스터 찾기
+    //좌표로 클러스터 찾기
     public Cluster findClusterByCoordinates(double latitude, double longitude) {
-        long clusterId = 0;
+        String clusterId = findClusterIdByCoordinates(latitude, longitude);
+        Cluster cluster = clusterRepository.findById(clusterId).orElse(null);
+        if (cluster != null) {
+            return cluster;
+        } else {
+            logger.error("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
+            throw new NotFoundException("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
+        }
+
+    }
+
+    // 좌표로 클러스터 ID찾기
+    public String findClusterIdByCoordinates(double latitude, double longitude) {
+//        long clusterId = 0;
+        String clusterId = "";
         int level = 0;
 
         double minLat = LAT_MIN;
@@ -183,52 +209,83 @@ public class ClusterService {
         double minLon = LON_MIN;
         double maxLon = LON_MAX;
 
-        Cluster cluster = null;
+        //Cluster cluster = null;
 
-        while (true) {
+        while (level <= MAX_LEVEL) {
             double midLat = (minLat + maxLat) / 2;
             double midLon = (minLon + maxLon) / 2;
 
-            int quadrant = 0;
-            if (latitude >= midLat) {
-                quadrant |= 2; // 위쪽
-                minLat = midLat;
-            } else {
-                maxLat = midLat;
+            int rowOffset = (latitude >= midLat) ? 1 : 0;
+            int colOffset = (longitude >= midLon) ? 1 : 0;
+
+            int index = rowOffset * 2 + colOffset;
+
+            clusterId = generateClusterId(clusterId, index);
+
+            Optional<Cluster> clusterOpt = clusterRepository.findById(clusterId);
+            if (clusterOpt.isEmpty()) {
+                // 존재하지 않으면 이전 레벨의 클러스터 ID 반환
+                return clusterId.substring(0, clusterId.lastIndexOf('-'));
             }
 
-            if (longitude >= midLon) {
-                quadrant |= 1; // 오른쪽
-                minLon = midLon;
-            } else {
-                maxLon = midLon;
-            }
-
-            clusterId = (clusterId << 2) | quadrant;
-            level++;
-
-            // 클러스터 조회
-            cluster = clusterRepository.findById(clusterId).orElse(null);
-
-            if (cluster != null) {
-                if (cluster.getLevel() == level) {
-                    // 가장 상세한 클러스터를 찾음
-                    return cluster;
-                }
-            } else {
-                // 클러스터가 아직 생성되지 않았으면 상위 클러스터 반환
-                clusterId >>= 2;
-                level--;
-                return clusterRepository.findById(clusterId).orElse(null);
-            }
-
-            // 최대 수준에 도달하면 종료
-            if (level >= getCurrentMaxLevel()) {
+            if (level == MAX_LEVEL) {
                 break;
             }
+
+            //경계 업데이트
+            if (rowOffset == 0) {
+                maxLat =midLat;
+            } else {
+                minLat = midLat;
+            }
+            if (colOffset == 0) {
+                maxLon = minLon;
+            } else {
+                minLon = midLon;
+            }
+
+            level++;
+
+//            int quadrant = 0;
+//            if (latitude >= midLat) {
+//                quadrant |= 2; // 위쪽
+//                minLat = midLat;
+//            } else {
+//                maxLat = midLat;
+//            }
+//
+//            if (longitude >= midLon) {
+//                quadrant |= 1; // 오른쪽
+//                minLon = midLon;
+//            } else {
+//                maxLon = midLon;
+//            }
+//
+//            clusterId = (clusterId << 2) | quadrant;
+//            level++;
+//
+//            // 클러스터 조회
+//            cluster = clusterRepository.findById(clusterId).orElse(null);
+//
+//            if (cluster != null) {
+//                if (cluster.getLevel() == level) {
+//                    // 가장 상세한 클러스터를 찾음
+//                    return cluster;
+//                }
+//            } else {
+//                // 클러스터가 아직 생성되지 않았으면 상위 클러스터 반환
+//                clusterId >>= 2;
+//                level--;
+//                return clusterRepository.findById(clusterId).orElse(null);
+//            }
+//
+//            // 최대 수준에 도달하면 종료
+//            if (level >= getCurrentMaxLevel()) {
+//                break;
+//            }
         }
 
-        return cluster;
+        return clusterId;
     }
 
     // 현재 최대 분할 수준 반환

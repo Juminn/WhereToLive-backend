@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ClusterRepository extends JpaRepository<Cluster, Long> {
+public interface ClusterRepository extends JpaRepository<Cluster, String> {
 
     // 현재 분할된 클러스터 중 최대 level 반환
     @Query("SELECT MAX(c.level) FROM Cluster c")
@@ -22,4 +22,5 @@ public interface ClusterRepository extends JpaRepository<Cluster, Long> {
     List<Cluster> findByStatusOrderByLevelAsc(ClusterStatus status);
 
     Optional<Cluster> findFirstByStatus(ClusterStatus status);
+    Optional<Cluster> findFirstByStatusOOrderByLevelAsc(ClusterStatus status);
 }

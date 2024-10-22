@@ -15,7 +15,8 @@ import java.time.LocalDateTime;
 public class Cluster {
 
     @Id
-    private Long id; // 클러스터 ID (Morton 코드 사용)
+    private String id;
+    //private Long id; // 클러스터 ID (Morton 코드 사용)
 
     private int level; // 분할 수준 (0부터 시작)
 
@@ -26,7 +27,8 @@ public class Cluster {
     private double maxLongitude;
 
     // 부모 클러스터 ID
-    private Long parentId;
+    private String parentId;
+    //private Long parentId;
 
     // 생성 날짜
     private LocalDateTime createdAt;

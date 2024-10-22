@@ -23,7 +23,7 @@ public class ClusterService {
     @Autowired
     private ClusterRepository clusterRepository;
 
-    private static final int MAX_LEVEL = 5;
+    private static final int MAX_LEVEL = 10;
 
     private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
 
@@ -45,6 +45,17 @@ public class ClusterService {
 
         List<Cluster> pendingClusters = clusterRepository.findByStatusOrderByLevelAsc(ClusterStatus.PENDING);
         //clusterQueue.addAll(pendingClusters);
+    }
+
+    //@PostConstruct
+    public void test() {
+        //1-3-1-0-2 37.49818621875,127.127661875 non split
+        getOpportunityCostByCoordinates(37.49818621875,127.127661875);
+        getOpportunityCostByCoordinates(37.49818621876,127.127661876);
+
+        //0-0-2-0  37.451023875000004,126.734086 split
+        getOpportunityCostByCoordinates(37.451023875000004,126.734086);
+        getOpportunityCostByCoordinates(37.451023875000005,126.734087);
     }
 
     // 초기 클러스터 생성
@@ -239,7 +250,7 @@ public class ClusterService {
                 minLat = midLat;
             }
             if (colOffset == 0) {
-                maxLon = minLon;
+                maxLon = midLon;
             } else {
                 minLon = midLon;
             }
@@ -297,8 +308,9 @@ public class ClusterService {
     // 좌표를 기반으로 기회 비용을 조회하는 메소드
     public double getOpportunityCostByCoordinates(double latitude, double longitude) {
         Cluster cluster = findClusterByCoordinates(latitude, longitude);
-        if (cluster != null && cluster.getOpportunityCost() != null) {
-            return cluster.getOpportunityCost();
+        if (cluster != null) {
+            logger.info(cluster.toString());
+            return 0;
         } else {
             throw new RuntimeException("해당 좌표에 대한 기회 비용을 찾을 수 없습니다.");
         }

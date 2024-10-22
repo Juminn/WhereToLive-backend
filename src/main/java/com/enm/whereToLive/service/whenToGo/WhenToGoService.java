@@ -44,10 +44,15 @@ public class WhenToGoService {
             //500미터 보다 범위가 작은 경우 리턴을 못받기때문에 예외처리
             double distance = calculateDistance(startY, startX, goalY, goalX);
             if (e.getStatusCode() == HttpStatus.BAD_REQUEST && distance < 500) {
-                System.out.println("Exception처리 거리가 짧아서 기본 처리 거리: " + distance);
-                goingWorkDTO.setCost(10000);
-                goingWorkDTO.setDuration(1);
-            } else {
+                System.out.println("Exception처리 거리가 짧아서 기본 처리 거리 ~500m: " + distance);
+                goingWorkDTO.setCost(1000);
+                goingWorkDTO.setDuration(5);
+            } else if (e.getStatusCode() == HttpStatus.BAD_REQUEST && distance < 1000)  {
+                System.out.println("Exception처리 거리가 짧아서 기본 처리 거리 500m~1km: " + distance);
+                goingWorkDTO.setCost(2000);
+                goingWorkDTO.setDuration(10);
+            }
+            else {
                 System.out.println(distance);
                 throw e; // Rethrow other exceptions
             }

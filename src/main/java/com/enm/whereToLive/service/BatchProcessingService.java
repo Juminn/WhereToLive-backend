@@ -70,8 +70,8 @@ public class BatchProcessingService {
             double centerLat = (newCluster.getMinLatitude() + newCluster.getMaxLatitude()) / 2;
             double centerLon = (newCluster.getMinLongitude() + newCluster.getMaxLongitude()) / 2;
 
-            Destination destination = new Destination(newCluster.getId().toString(), centerLat, centerLon);
-            //batchMakeOpportunity(destination);
+            Destination destination = new Destination(newCluster.getId(), centerLat, centerLon);
+            batchMakeOpportunity(destination);
 
             newCluster.setStatus(ClusterStatus.CAL_COMPLETED);
             clusterRepository.save(newCluster);

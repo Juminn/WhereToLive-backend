@@ -108,7 +108,7 @@ public class ClusterService {
     public void generateDailyClusters() {
         List<Cluster> newClusters = new ArrayList<>();
 
-        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatusOOrderByLevelAsc(ClusterStatus.CAL_COMPLETED);
+        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatusOrderByLevelAsc(ClusterStatus.CAL_COMPLETED);
         Cluster parentCluster;
 
         if (optionalParentCluster.isEmpty()){

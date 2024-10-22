@@ -22,5 +22,5 @@ public interface ClusterRepository extends JpaRepository<Cluster, String> {
     List<Cluster> findByStatusOrderByLevelAsc(ClusterStatus status);
 
     Optional<Cluster> findFirstByStatus(ClusterStatus status);
-    Optional<Cluster> findFirstByStatusOOrderByLevelAsc(ClusterStatus status);
+    Optional<Cluster> findFirstByStatusOrderByLevelAsc(ClusterStatus status);
 }

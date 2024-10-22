@@ -6,6 +6,7 @@ import com.enm.whereToLive.service.dabang.UtilService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -37,6 +38,11 @@ public class WhenToGoApiClient {
                         .queryParam("transferCost", whenToGoRequestDTO.getTransferCost())
                         .build())
                 .retrieve()
+                .onStatus(status -> status.isError(), clientResponse -> {
+                    // 에러 상태일 때 예외 처리
+                    return clientResponse.bodyToMono(String.class)
+                            .flatMap(errorBody -> Mono.error(new ResponseStatusException(clientResponse.statusCode(), errorBody)));
+                })
                 .bodyToMono(WhenToGoResponseDTO.class)
                 .block();
 

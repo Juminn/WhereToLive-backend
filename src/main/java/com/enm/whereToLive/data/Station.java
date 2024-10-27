@@ -18,5 +18,6 @@ public class Station {
     private Double montlyGoingOpportunity;
     private Double montlyTotalOpportunity;
     private Integer goingWorkMinute;
-
+    private String pros;
+    private String cons;
 }

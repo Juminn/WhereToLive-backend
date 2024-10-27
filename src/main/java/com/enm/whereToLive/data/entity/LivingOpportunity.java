@@ -75,4 +75,12 @@ public class LivingOpportunity {
     @DynamoDBAttribute(attributeName = "commute_time")
     private Integer commuteTime;
 
+    @Getter
+    @Setter
+    private String pros;
+
+    @Getter
+    @Setter
+    private String cons;
+
 }

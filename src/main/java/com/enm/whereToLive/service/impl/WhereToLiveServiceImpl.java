@@ -42,8 +42,11 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
         for(LivingOpportunity livingOpportunity : livingOpportunities) {
             Station station = stationService.getStationById(livingOpportunity.getStationID());
+
             livingOpportunity.setLatitude(station.getLatitude());
             livingOpportunity.setLongitude(station.getLongitude());
+            livingOpportunity.setPros(station.getPros());
+            livingOpportunity.setCons(station.getCons());
         }
 
         livingOpportunities = calPlaceOpportunity(livingOpportunities, workDays);

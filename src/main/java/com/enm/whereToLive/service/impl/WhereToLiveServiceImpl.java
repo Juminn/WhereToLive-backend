@@ -1,7 +1,10 @@
 package com.enm.whereToLive.service.impl;
 
+import com.enm.whereToLive.data.Destination;
+import com.enm.whereToLive.data.Station;
 import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
+import com.enm.whereToLive.data.opportunityResponseDTO;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import com.enm.whereToLive.service.dabang.DabangService;
@@ -31,9 +34,24 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
 
     @Override
-    public List<LivingOpportunity> getPlaceOpportunity(String destination, int workDays) {
-        List<LivingOpportunity> livingOpportunities = livingOpportunityRepository.findByDestination(destination);
-        return calPlaceOpportunity(livingOpportunities, workDays);
+    public opportunityResponseDTO getPlaceOpportunity(String name, int workDays) {
+        opportunityResponseDTO opportunityResponseDTO = new opportunityResponseDTO();
+
+        List<LivingOpportunity> livingOpportunities = livingOpportunityRepository.findByDestination(name);
+        Destination destination = new Destination(name, livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
+
+        for(LivingOpportunity livingOpportunity : livingOpportunities) {
+            Station station = stationService.getStationById(livingOpportunity.getStationID());
+            livingOpportunity.setLatitude(station.getLatitude());
+            livingOpportunity.setLongitude(station.getLongitude());
+        }
+
+        livingOpportunities = calPlaceOpportunity(livingOpportunities, workDays);
+
+        opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
+        opportunityResponseDTO.setDestination(destination);
+
+        return opportunityResponseDTO;
     }
 
     private List<LivingOpportunity> calPlaceOpportunity(List<LivingOpportunity> livingOpportunities, int workDays) {

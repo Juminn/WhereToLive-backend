@@ -48,10 +48,14 @@ public class BatchProcessingService {
     public void processDailyClusters() throws Exception {
 
         while (true) {
-            // 대기중인 클러스터 가져오기
-            Optional<Cluster> optionalNewCluster = clusterRepository.findFirstByStatus(ClusterStatus.PENDING);
+            // 진행 중 종료된 클러스터 가져오기
+            Optional<Cluster> optionalNewCluster = clusterRepository.findFirstByStatus(ClusterStatus.PROCESSING);
             Cluster newCluster;
 
+            // 대기중인 클러스터 가져오기
+            if(optionalNewCluster.isEmpty()) {
+                optionalNewCluster = clusterRepository.findFirstByStatus(ClusterStatus.PENDING);
+            }
             if (optionalNewCluster.isEmpty()){
                 logger.info("No PENDING Cluster, so Generate Cluster");
 

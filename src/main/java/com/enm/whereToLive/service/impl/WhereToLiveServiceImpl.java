@@ -7,6 +7,7 @@ import com.enm.whereToLive.data.cluster.LivingOpportunity2;
 import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
 import com.enm.whereToLive.data.opportunityResponseDTO;
+import com.enm.whereToLive.data.opportunityResponseDTO2;
 import com.enm.whereToLive.data.repository.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.ClusterService;
 import com.enm.whereToLive.service.StationService;
@@ -77,8 +78,8 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public opportunityResponseDTO getPlaceOpportunity2(String name, int workDays) {
-        opportunityResponseDTO opportunityResponseDTO = new opportunityResponseDTO();
+    public opportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays) {
+        opportunityResponseDTO2 opportunityResponseDTO = new opportunityResponseDTO2();
 
         List<LivingOpportunity> livingOpportunities = livingOpportunityRepository.findByDestination(name);
         Destination destination = new Destination(name, livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
@@ -94,7 +95,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
         livingOpportunities = calPlaceOpportunity2(livingOpportunities, workDays);
 
-        //opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
+        opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
         opportunityResponseDTO.setDestination(destination);
 
         return opportunityResponseDTO;

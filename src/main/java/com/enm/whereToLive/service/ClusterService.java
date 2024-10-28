@@ -233,7 +233,7 @@ public class ClusterService {
 
             clusterId = generateClusterId(clusterId, index);
 
-            Optional<Cluster> clusterOpt = clusterRepository.findById(clusterId);
+            Optional<Cluster> clusterOpt = clusterRepository.findByIdAndStatusNot(clusterId, ClusterStatus.PENDING);
             if (clusterOpt.isEmpty()) {
                 // 존재하지 않으면 이전 레벨의 클러스터 ID 반환
                 return clusterId.substring(0, clusterId.lastIndexOf('-'));

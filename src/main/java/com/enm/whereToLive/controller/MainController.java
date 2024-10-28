@@ -4,6 +4,7 @@ import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.Station;
 import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.data.opportunityResponseDTO;
+import com.enm.whereToLive.data.opportunityResponseDTO2;
 import com.enm.whereToLive.service.BatchService;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
@@ -53,7 +54,7 @@ public class MainController {
     }
 
     @GetMapping("/opportunity2")
-    public opportunityResponseDTO opportunity2(@RequestParam String company, @RequestParam int workdays) throws Exception {
+    public opportunityResponseDTO2 opportunity2(@RequestParam String company, @RequestParam int workdays) throws Exception {
 
         return whereToLiveService.getPlaceOpportunity2(company, workdays);
     }

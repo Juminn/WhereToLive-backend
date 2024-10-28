@@ -12,4 +12,5 @@ import java.util.List;
 @Repository
 public interface LivingOpportunityRepository2 extends JpaRepository<LivingOpportunity2, Long> {
 
+    List<LivingOpportunity2> findByIdDestination(String destination);
 }

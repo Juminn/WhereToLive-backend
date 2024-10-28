@@ -7,5 +7,7 @@ import java.util.List;
 
 public interface WhereToLiveService {
 
-    opportunityResponseDTO getPlaceOpportunity(String destination, int workDays) throws Exception;
+    opportunityResponseDTO getPlaceOpportunity(double latitude, Double longitude, int workDays) throws Exception;
+
+    opportunityResponseDTO getPlaceOpportunity2(String name, int workDays);
 }

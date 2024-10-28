@@ -28,4 +28,6 @@ public class LivingOpportunity2 {
     private Integer totalOpportunityCost;
     private Integer commuteTime;
 
+    private String pros;
+    private String cons;
 }

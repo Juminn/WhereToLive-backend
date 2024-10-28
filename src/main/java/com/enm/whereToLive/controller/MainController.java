@@ -47,9 +47,15 @@ public class MainController {
     }
 
     @GetMapping("/opportunity")
-    public opportunityResponseDTO opportunity(@RequestParam String company, @RequestParam int workdays) throws Exception {
+    public opportunityResponseDTO opportunity(@RequestParam double latitude, @RequestParam Double longitude, @RequestParam int workdays) throws Exception {
         
-        return whereToLiveService.getPlaceOpportunity(company, workdays);
+        return whereToLiveService.getPlaceOpportunity(latitude, longitude, workdays);
+    }
+
+    @GetMapping("/opportunity2")
+    public opportunityResponseDTO opportunity2(@RequestParam String company, @RequestParam int workdays) throws Exception {
+
+        return whereToLiveService.getPlaceOpportunity2(company, workdays);
     }
 
     @GetMapping("/batch")

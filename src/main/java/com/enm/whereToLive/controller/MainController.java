@@ -2,10 +2,9 @@ package com.enm.whereToLive.controller;
 
 import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
 import com.enm.whereToLive.data.opportunityResponseDTO;
 import com.enm.whereToLive.data.opportunityResponseDTO2;
-import com.enm.whereToLive.service.BatchService;
+import com.enm.whereToLive.service.BatchServiceOld;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
@@ -15,18 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class MainController {
 
-    private BatchService batchService;
+    private BatchServiceOld batchService;
     private WhereToLiveService whereToLiveService;
     private TestService testService;
     private StationService stationService;
 
     @Autowired
-    public MainController(BatchService batchService, WhereToLiveService whereToLiveService, TestService testService, StationService stationService){
+    public MainController(BatchServiceOld batchService, WhereToLiveService whereToLiveService, TestService testService, StationService stationService){
         this.batchService = batchService;
         this.whereToLiveService = whereToLiveService;
         this.testService = testService;

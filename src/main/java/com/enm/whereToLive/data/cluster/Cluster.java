@@ -37,8 +37,15 @@ public class Cluster {
     private LocalDateTime completeAt;
 
     @Enumerated(EnumType.STRING)
-    private ClusterStatus status;
+    private Status status;
 
     // 기회 비용
     private Double opportunityCost;
+
+    public enum Status {
+        PENDING,
+        PROCESSING,
+        CAL_COMPLETED,
+        SPLIT_COMPLETED
+    }
 }

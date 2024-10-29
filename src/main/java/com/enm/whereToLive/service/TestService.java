@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class TestService {
 
-    private final BatchService batchService;
+    private final BatchServiceOld batchService;
     private StationService stationService;
     private DabangService dabangService;
     private WhenToGoService whenToGoService;
     private LivingOpportunityRepository livingOpportunityRepository;
 
     @Autowired
-    public TestService(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository, BatchService batchService) {
+    public TestService(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository, BatchServiceOld batchService) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;

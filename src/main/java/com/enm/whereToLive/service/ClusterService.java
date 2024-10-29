@@ -5,7 +5,6 @@ package com.enm.whereToLive.service;
 //import com.example.seoulclusters.repository.ClusterRepository;
 import com.amazonaws.services.kms.model.NotFoundException;
 import com.enm.whereToLive.data.cluster.Cluster;
-import com.enm.whereToLive.data.cluster.ClusterStatus;
 import com.enm.whereToLive.data.repository.ClusterRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.LoggerFactory;
@@ -43,7 +42,7 @@ public class ClusterService {
             generateInitialClusters();
         }
 
-        List<Cluster> pendingClusters = clusterRepository.findByStatusOrderByLevelAsc(ClusterStatus.PENDING);
+        List<Cluster> pendingClusters = clusterRepository.findByStatusOrderByLevelAsc(Cluster.Status.PENDING);
         //clusterQueue.addAll(pendingClusters);
     }
 
@@ -84,7 +83,7 @@ public class ClusterService {
                 cluster.setMaxLatitude(maxLat);
                 cluster.setMinLongitude(minLon);
                 cluster.setMaxLongitude(maxLon);
-                cluster.setStatus(ClusterStatus.PENDING);
+                cluster.setStatus(Cluster.Status.PENDING);
                 cluster.setCreatedAt(LocalDateTime.now());
 
                 clusters.add(cluster);
@@ -119,7 +118,7 @@ public class ClusterService {
     public void generateDailyClusters() {
         List<Cluster> newClusters = new ArrayList<>();
 
-        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatusOrderByLevelAsc(ClusterStatus.CAL_COMPLETED);
+        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatusOrderByLevelAsc(Cluster.Status.CAL_COMPLETED);
         Cluster parentCluster;
 
         if (optionalParentCluster.isEmpty()){
@@ -138,7 +137,7 @@ public class ClusterService {
         clusterRepository.saveAll(newClusters);
 
         // 부모 클러스터
-        parentCluster.setStatus(ClusterStatus.SPLIT_COMPLETED);
+        parentCluster.setStatus(Cluster.Status.SPLIT_COMPLETED);
         clusterRepository.save(parentCluster);
     }
 
@@ -186,7 +185,7 @@ public class ClusterService {
             subCluster.setMaxLatitude(subMaxLat);
             subCluster.setMinLongitude(subMinLon);
             subCluster.setMaxLongitude(subMaxLon);
-            subCluster.setStatus(ClusterStatus.PENDING);
+            subCluster.setStatus(Cluster.Status.PENDING);
             subCluster.setParentId(parentCluster.getId());
             subCluster.setCreatedAt(LocalDateTime.now());
 
@@ -233,7 +232,7 @@ public class ClusterService {
 
             clusterId = generateClusterId(clusterId, index);
 
-            Optional<Cluster> clusterOpt = clusterRepository.findByIdAndStatusNot(clusterId, ClusterStatus.PENDING);
+            Optional<Cluster> clusterOpt = clusterRepository.findByIdAndStatusNot(clusterId, Cluster.Status.PENDING);
             if (clusterOpt.isEmpty()) {
                 // 존재하지 않으면 이전 레벨의 클러스터 ID 반환
                 return clusterId.substring(0, clusterId.lastIndexOf('-'));

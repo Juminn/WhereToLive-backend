@@ -5,7 +5,7 @@ import com.enm.whereToLive.data.Station;
 
 import java.util.ArrayList;
 
-public interface BatchService {
+public interface BatchServiceOld {
 
     ArrayList<Station> batchMakeOpportunityDemo(Destination destination) throws Exception;
     ArrayList<Station> batchMakeOpportunity(Destination destination) throws Exception;

@@ -1,7 +1,6 @@
 package com.enm.whereToLive.data.repository;
 
 import com.enm.whereToLive.data.cluster.Cluster;
-import com.enm.whereToLive.data.cluster.ClusterStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,10 +18,10 @@ public interface ClusterRepository extends JpaRepository<Cluster, String> {
     @Query("SELECT c FROM Cluster c WHERE c.createdAt >= CURRENT_DATE")
     List<Cluster> findClustersCreatedToday();
 
-    List<Cluster> findByStatusOrderByLevelAsc(ClusterStatus status);
+    List<Cluster> findByStatusOrderByLevelAsc(Cluster.Status status);
 
-    Optional<Cluster> findFirstByStatus(ClusterStatus status);
-    Optional<Cluster> findFirstByStatusOrderByLevelAsc(ClusterStatus status);
+    Optional<Cluster> findFirstByStatus(Cluster.Status status);
+    Optional<Cluster> findFirstByStatusOrderByLevelAsc(Cluster.Status status);
 
-    Optional<Cluster> findByIdAndStatusNot(String id, ClusterStatus status);
+    Optional<Cluster> findByIdAndStatusNot(String id, Cluster.Status status);
 }

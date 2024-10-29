@@ -3,11 +3,15 @@ package com.enm.whereToLive.service.whenToGo;
 import com.enm.whereToLive.data.whenToGo.WhenToGoRequestDTO;
 import com.enm.whereToLive.data.whenToGo.WhenToGoResponseDTO;
 import com.enm.whereToLive.service.dabang.UtilService;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
 @Service
 public class WhenToGoApiClient {
@@ -15,7 +19,14 @@ public class WhenToGoApiClient {
     private WebClient webClient;
 
     public WhenToGoApiClient(UtilService utilService) {
+
+        //test용 SSL인증 비활성화
+        HttpClient httpClient = HttpClient.create()
+                .secure(t -> t.sslContext(SslContextBuilder.forClient()
+                        .trustManager(InsecureTrustManagerFactory.INSTANCE)));
+
         this.webClient = WebClient.builder()
+                .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .filter(logRequest())
                 .baseUrl("https://api.xn--ih3bt9oq0b6yi50k.com")
                 .build();

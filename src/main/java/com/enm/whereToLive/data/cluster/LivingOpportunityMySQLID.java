@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class LivingOpportunityId2 implements Serializable {
+public class LivingOpportunityMySQLID implements Serializable {
 
     private String destination;
     private Integer stationId;

@@ -7,13 +7,13 @@ import org.springframework.data.annotation.Id;
 @ToString
 @AllArgsConstructor
 @DynamoDBTable(tableName = "LivingOpportunity")
-public class LivingOpportunity {
+public class LivingOpportunityDynamo {
 
     @Id
-    private LivingOpportunityId id; // 복합 키를 위한 ID 클래스
+    private LivingOpportunityDynamoID id; // 복합 키를 위한 ID 클래스
 
-    public LivingOpportunity() {
-        this.id = new LivingOpportunityId();
+    public LivingOpportunityDynamo() {
+        this.id = new LivingOpportunityDynamoID();
     }
 
     @DynamoDBHashKey(attributeName = "destination")

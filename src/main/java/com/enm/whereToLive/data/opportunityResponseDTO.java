@@ -1,7 +1,6 @@
 package com.enm.whereToLive.data;
 
-import com.enm.whereToLive.data.cluster.LivingOpportunity2;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
+import com.enm.whereToLive.data.cluster.LivingOpportunityMySQL;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 public class opportunityResponseDTO {
     Destination destination;
-    List<LivingOpportunity2> livingOpportunities;
+    List<LivingOpportunityMySQL> livingOpportunities;
 }

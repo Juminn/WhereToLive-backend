@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LivingOpportunityId {
+public class LivingOpportunityDynamoID {
     @DynamoDBHashKey(attributeName = "destination")
     private String destination;
 

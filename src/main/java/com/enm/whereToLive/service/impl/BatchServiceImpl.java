@@ -3,10 +3,10 @@ package com.enm.whereToLive.service.impl;
 import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.GoingWorkDTO;
 import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
+import com.enm.whereToLive.data.entity.LivingOpportunityDynamo;
 import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
-import com.enm.whereToLive.service.BatchService;
+import com.enm.whereToLive.service.BatchServiceOld;
 import com.enm.whereToLive.service.dabang.DabangService;
 import com.enm.whereToLive.service.whenToGo.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 @Service
-public class BatchServiceImpl implements BatchService {
+public class BatchServiceImpl implements BatchServiceOld {
 
     private StationService stationService;
     private DabangService dabangService;
@@ -41,7 +41,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination){
-        ArrayList<LivingOpportunity> livingOpportunities = new ArrayList<>();
+        ArrayList<LivingOpportunityDynamo> livingOpportunities = new ArrayList<>();
 
         for(Station station:stationList) {
 
@@ -62,22 +62,22 @@ public class BatchServiceImpl implements BatchService {
                 );
 
                 //test
-                LivingOpportunity livingOpportunity = new LivingOpportunity();
-                livingOpportunity.setDestination(destination.getName());
-                livingOpportunity.setStationID(station.getId());
-                livingOpportunity.setTotalOpportunityCost(monthlyTotalOpportunity);
-                livingOpportunity.setCommuteCost(monthlyGoingWorkOpportunity);
-                livingOpportunity.setCommuteTime(goingWorkDTO.getDuration());
-                livingOpportunity.setStationName(station.getName());
-                livingOpportunity.setLine(station.getLine());
-                livingOpportunity.setLatitude(destination.getLat());
-                livingOpportunity.setLongitude(destination.getLng());
-                livingOpportunity.setRentCost(monthlyRent);
+                LivingOpportunityDynamo livingOpportunityDynamo = new LivingOpportunityDynamo();
+                livingOpportunityDynamo.setDestination(destination.getName());
+                livingOpportunityDynamo.setStationID(station.getId());
+                livingOpportunityDynamo.setTotalOpportunityCost(monthlyTotalOpportunity);
+                livingOpportunityDynamo.setCommuteCost(monthlyGoingWorkOpportunity);
+                livingOpportunityDynamo.setCommuteTime(goingWorkDTO.getDuration());
+                livingOpportunityDynamo.setStationName(station.getName());
+                livingOpportunityDynamo.setLine(station.getLine());
+                livingOpportunityDynamo.setLatitude(destination.getLat());
+                livingOpportunityDynamo.setLongitude(destination.getLng());
+                livingOpportunityDynamo.setRentCost(monthlyRent);
 
                 //임시
-                livingOpportunityRepository.save(livingOpportunity);
+                livingOpportunityRepository.save(livingOpportunityDynamo);
 
-                livingOpportunities.add(livingOpportunity);
+                livingOpportunities.add(livingOpportunityDynamo);
             }
             else{
                 System.out.println(

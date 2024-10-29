@@ -4,22 +4,18 @@ import com.enm.whereToLive.data.Destination;
 import com.enm.whereToLive.data.GoingWorkDTO;
 import com.enm.whereToLive.data.Station;
 import com.enm.whereToLive.data.cluster.Cluster;
-import com.enm.whereToLive.data.cluster.ClusterStatus;
-import com.enm.whereToLive.data.cluster.LivingOpportunity2;
-import com.enm.whereToLive.data.cluster.LivingOpportunityId2;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
+import com.enm.whereToLive.data.cluster.LivingOpportunityMySQL;
+import com.enm.whereToLive.data.cluster.LivingOpportunityMySQLID;
+import com.enm.whereToLive.data.entity.LivingOpportunityDynamo;
 import com.enm.whereToLive.data.repository.ClusterRepository;
 import com.enm.whereToLive.data.repository.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.whenToGo.WhenToGoService;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,12 +45,12 @@ public class BatchProcessingService {
 
         while (true) {
             // 진행 중 종료된 클러스터 가져오기
-            Optional<Cluster> optionalNewCluster = clusterRepository.findFirstByStatus(ClusterStatus.PROCESSING);
+            Optional<Cluster> optionalNewCluster = clusterRepository.findFirstByStatus(Cluster.Status.PROCESSING);
             Cluster newCluster;
 
             // 대기중인 클러스터 가져오기
             if(optionalNewCluster.isEmpty()) {
-                optionalNewCluster = clusterRepository.findFirstByStatus(ClusterStatus.PENDING);
+                optionalNewCluster = clusterRepository.findFirstByStatus(Cluster.Status.PENDING);
             }
             if (optionalNewCluster.isEmpty()){
                 logger.info("No PENDING Cluster, so Generate Cluster");
@@ -68,7 +64,7 @@ public class BatchProcessingService {
             }
 
             // 3. 기회 비용 계산 및 저장
-            newCluster.setStatus(ClusterStatus.PROCESSING);
+            newCluster.setStatus(Cluster.Status.PROCESSING);
             clusterRepository.save(newCluster);
 
             double centerLat = (newCluster.getMinLatitude() + newCluster.getMaxLatitude()) / 2;
@@ -77,7 +73,7 @@ public class BatchProcessingService {
             Destination destination = new Destination(newCluster.getId(), centerLat, centerLon);
             batchMakeOpportunity(destination);
 
-            newCluster.setStatus(ClusterStatus.CAL_COMPLETED);
+            newCluster.setStatus(Cluster.Status.CAL_COMPLETED);
             clusterRepository.save(newCluster);
         }
     }
@@ -93,7 +89,7 @@ public class BatchProcessingService {
     }
 
     public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination){
-        ArrayList<LivingOpportunity> livingOpportunities = new ArrayList<>();
+        ArrayList<LivingOpportunityDynamo> livingOpportunities = new ArrayList<>();
 
         for(Station station:stationList) {
 
@@ -112,9 +108,9 @@ public class BatchProcessingService {
                 );
 
                 //test
-                LivingOpportunity2 livingOpportunity = new LivingOpportunity2();
+                LivingOpportunityMySQL livingOpportunity = new LivingOpportunityMySQL();
 
-                LivingOpportunityId2 livingOpportunityId = new LivingOpportunityId2();
+                LivingOpportunityMySQLID livingOpportunityId = new LivingOpportunityMySQLID();
                 livingOpportunityId.setDestination(destination.getName());
                 livingOpportunityId.setStationId(station.getId());
 

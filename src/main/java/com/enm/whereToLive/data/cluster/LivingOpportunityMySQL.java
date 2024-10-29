@@ -2,7 +2,6 @@ package com.enm.whereToLive.data.cluster;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -11,10 +10,10 @@ import lombok.*;
 @Data
 @Entity
 @Table(name = "living_opportunity")
-public class LivingOpportunity2 {
+public class LivingOpportunityMySQL {
 
     @EmbeddedId
-    private LivingOpportunityId2 id;
+    private LivingOpportunityMySQLID id;
 //    private String destination;
 //
 //    private Integer stationID;

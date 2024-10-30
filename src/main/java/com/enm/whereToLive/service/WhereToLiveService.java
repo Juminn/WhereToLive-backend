@@ -1,10 +1,11 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.data.entity.LivingOpportunity;
-
-import java.util.List;
+import com.enm.whereToLive.dto.opportunityResponseDTO;
+import com.enm.whereToLive.dto.opportunityResponseDTO2;
 
 public interface WhereToLiveService {
 
-    List<LivingOpportunity> getPlaceOpportunity(String destination, int workDays) throws Exception;
+    opportunityResponseDTO getPlaceOpportunity(double latitude, Double longitude, int workDays) throws Exception;
+
+    opportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays);
 }

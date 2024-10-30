@@ -1,9 +1,10 @@
 package com.enm.whereToLive.controller;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
-import com.enm.whereToLive.service.BatchService;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.dto.opportunityResponseDTO;
+import com.enm.whereToLive.dto.opportunityResponseDTO2;
+import com.enm.whereToLive.service.BatchServiceOld;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
@@ -13,18 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class MainController {
 
-    private BatchService batchService;
+    private BatchServiceOld batchService;
     private WhereToLiveService whereToLiveService;
     private TestService testService;
     private StationService stationService;
 
     @Autowired
-    public MainController(BatchService batchService, WhereToLiveService whereToLiveService, TestService testService, StationService stationService){
+    public MainController(BatchServiceOld batchService, WhereToLiveService whereToLiveService, TestService testService, StationService stationService){
         this.batchService = batchService;
         this.whereToLiveService = whereToLiveService;
         this.testService = testService;
@@ -46,9 +46,15 @@ public class MainController {
     }
 
     @GetMapping("/opportunity")
-    public List<LivingOpportunity> opportunity(@RequestParam String company, @RequestParam int workdays) throws Exception {
+    public opportunityResponseDTO opportunity(@RequestParam double latitude, @RequestParam Double longitude, @RequestParam int workdays) throws Exception {
         
-        return whereToLiveService.getPlaceOpportunity(company, workdays);
+        return whereToLiveService.getPlaceOpportunity(latitude, longitude, workdays);
+    }
+
+    @GetMapping("/opportunity2")
+    public opportunityResponseDTO2 opportunity2(@RequestParam String company, @RequestParam int workdays) throws Exception {
+
+        return whereToLiveService.getPlaceOpportunity2(company, workdays);
     }
 
     @GetMapping("/batch")

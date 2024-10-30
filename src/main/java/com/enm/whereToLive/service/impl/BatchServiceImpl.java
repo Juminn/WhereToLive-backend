@@ -1,22 +1,21 @@
 package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.GoingWorkDTO;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
-import com.enm.whereToLive.data.repository.LivingOpportunityRepository;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.dto.GoingWorkDTO;
+import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
-import com.enm.whereToLive.service.BatchService;
-import com.enm.whereToLive.service.dabang.DabangService;
-import com.enm.whereToLive.service.whenToGo.WhenToGoService;
+import com.enm.whereToLive.service.BatchServiceOld;
+import com.enm.whereToLive.api.dabang.service.DabangService;
+import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Service
-public class BatchServiceImpl implements BatchService {
+public class BatchServiceImpl implements BatchServiceOld {
 
     private StationService stationService;
     private DabangService dabangService;
@@ -24,7 +23,7 @@ public class BatchServiceImpl implements BatchService {
     private LivingOpportunityRepository livingOpportunityRepository;
 
     @Autowired
-    public BatchServiceImpl(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository) {
+    public BatchServiceImpl(StationService stationService, DabangService dabangService, WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;
@@ -42,7 +41,7 @@ public class BatchServiceImpl implements BatchService {
     }
 
     public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination){
-        ArrayList<LivingOpportunity> livingOpportunities = new ArrayList<>();
+        ArrayList<LivingOpportunityEntityDynamo> livingOpportunities = new ArrayList<>();
 
         for(Station station:stationList) {
 
@@ -63,22 +62,22 @@ public class BatchServiceImpl implements BatchService {
                 );
 
                 //test
-                LivingOpportunity livingOpportunity = new LivingOpportunity();
-                livingOpportunity.setDestination(destination.getName());
-                livingOpportunity.setStationID(station.getId());
-                livingOpportunity.setTotalOpportunityCost(monthlyTotalOpportunity);
-                livingOpportunity.setCommuteCost(monthlyGoingWorkOpportunity);
-                livingOpportunity.setCommuteTime(goingWorkDTO.getDuration());
-                livingOpportunity.setStationName(station.getName());
-                livingOpportunity.setLine(station.getLine());
-                livingOpportunity.setLatitude(destination.getLat());
-                livingOpportunity.setLongitude(destination.getLng());
-                livingOpportunity.setRentCost(monthlyRent);
+                LivingOpportunityEntityDynamo livingOpportunityEntityDynamo = new LivingOpportunityEntityDynamo();
+                livingOpportunityEntityDynamo.setDestination(destination.getName());
+                livingOpportunityEntityDynamo.setStationID(station.getId());
+                livingOpportunityEntityDynamo.setTotalOpportunityCost(monthlyTotalOpportunity);
+                livingOpportunityEntityDynamo.setCommuteCost(monthlyGoingWorkOpportunity);
+                livingOpportunityEntityDynamo.setCommuteTime(goingWorkDTO.getDuration());
+                livingOpportunityEntityDynamo.setStationName(station.getName());
+                livingOpportunityEntityDynamo.setLine(station.getLine());
+                livingOpportunityEntityDynamo.setLatitude(destination.getLat());
+                livingOpportunityEntityDynamo.setLongitude(destination.getLng());
+                livingOpportunityEntityDynamo.setRentCost(monthlyRent);
 
                 //임시
-                livingOpportunityRepository.save(livingOpportunity);
+                livingOpportunityRepository.save(livingOpportunityEntityDynamo);
 
-                livingOpportunities.add(livingOpportunity);
+                livingOpportunities.add(livingOpportunityEntityDynamo);
             }
             else{
                 System.out.println(

@@ -1,29 +1,23 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.entity.LivingOpportunity;
-import com.enm.whereToLive.data.entity.LivingOpportunityId;
-import com.enm.whereToLive.data.repository.LivingOpportunityRepository;
-import com.enm.whereToLive.service.dabang.DabangService;
-import com.enm.whereToLive.service.impl.BatchServiceImpl;
-import com.enm.whereToLive.service.whenToGo.WhenToGoService;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
+import com.enm.whereToLive.api.dabang.service.DabangService;
+import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 @Service
 public class TestService {
 
-    private final BatchService batchService;
+    private final BatchServiceOld batchService;
     private StationService stationService;
     private DabangService dabangService;
     private WhenToGoService whenToGoService;
     private LivingOpportunityRepository livingOpportunityRepository;
 
     @Autowired
-    public TestService(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository, BatchService batchService) {
+    public TestService(StationService stationService, DabangService dabangService, WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository, BatchServiceOld batchService) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;

@@ -11,9 +11,11 @@ import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRep
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableDynamoDBRepositories(basePackages = "com.enm.whereToLive.data.repository")
+@EnableJpaRepositories(basePackages = "com.enm.whereToLive.repository.mysql")
+@EnableDynamoDBRepositories(basePackages = "com.enm.whereToLive.repository.dynamo")
 public class DynamoDBConfig {
 
     @Value("${aws.accessKey}")

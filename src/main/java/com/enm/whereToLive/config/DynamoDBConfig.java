@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.enm.whereToLive.data.repository")
-@EnableDynamoDBRepositories(basePackages = "com.enm.whereToLive.data.dynamoDBRepository")
+@EnableJpaRepositories(basePackages = "com.enm.whereToLive.repository.mysql")
+@EnableDynamoDBRepositories(basePackages = "com.enm.whereToLive.repository.dynamo")
 public class DynamoDBConfig {
 
     @Value("${aws.accessKey}")

@@ -4,8 +4,8 @@ package com.enm.whereToLive.service;
 //import com.example.seoulclusters.model.NotFoundException;
 //import com.example.seoulclusters.repository.ClusterRepository;
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.enm.whereToLive.data.cluster.Cluster;
-import com.enm.whereToLive.data.repository.ClusterRepository;
+import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -33,7 +33,7 @@ public class ClusterService {
     private static final double LON_MAX = 127.183887;
 
     // 분할 대기 클러스터 큐
-    private Queue<Cluster> clusterQueue = new LinkedList<>();
+    private Queue<ClusterEntity> clusterEntityQueue = new LinkedList<>();
 
     // 초기화 메소드
     @PostConstruct
@@ -42,7 +42,7 @@ public class ClusterService {
             generateInitialClusters();
         }
 
-        List<Cluster> pendingClusters = clusterRepository.findByStatusOrderByLevelAsc(Cluster.Status.PENDING);
+        List<ClusterEntity> pendingClusterEntities = clusterRepository.findByStatusOrderByLevelAsc(ClusterEntity.Status.PENDING);
         //clusterQueue.addAll(pendingClusters);
     }
 
@@ -63,7 +63,7 @@ public class ClusterService {
         double latStep = (LAT_MAX - LAT_MIN) / gridSize;
         double lonStep = (LON_MAX - LON_MIN) / gridSize;
 
-        List<Cluster> clusters = new ArrayList<>();
+        List<ClusterEntity> clusterEntities = new ArrayList<>();
 
         for (int row = 0; row < gridSize; row++) {
             for (int col = 0; col < gridSize; col++) {
@@ -76,21 +76,21 @@ public class ClusterService {
                 //long clusterId = computeMortonCode(row, col, 2); // 2비트씩 사용 (4x4 그리드)
                 //clusterId = 1;
 
-                Cluster cluster = new Cluster();
-                cluster.setId(clusterId);
-                cluster.setLevel(0);
-                cluster.setMinLatitude(minLat);
-                cluster.setMaxLatitude(maxLat);
-                cluster.setMinLongitude(minLon);
-                cluster.setMaxLongitude(maxLon);
-                cluster.setStatus(Cluster.Status.PENDING);
-                cluster.setCreatedAt(LocalDateTime.now());
+                ClusterEntity clusterEntity = new ClusterEntity();
+                clusterEntity.setId(clusterId);
+                clusterEntity.setLevel(0);
+                clusterEntity.setMinLatitude(minLat);
+                clusterEntity.setMaxLatitude(maxLat);
+                clusterEntity.setMinLongitude(minLon);
+                clusterEntity.setMaxLongitude(maxLon);
+                clusterEntity.setStatus(ClusterEntity.Status.PENDING);
+                clusterEntity.setCreatedAt(LocalDateTime.now());
 
-                clusters.add(cluster);
+                clusterEntities.add(clusterEntity);
             }
         }
 
-        clusterRepository.saveAll(clusters);
+        clusterRepository.saveAll(clusterEntities);
 
         // 분할 큐에 초기 클러스터 추가
         //clusterQueue.addAll(clusters);
@@ -116,29 +116,29 @@ public class ClusterService {
 
     // 매일 호출되는 클러스터 분할 메소드
     public void generateDailyClusters() {
-        List<Cluster> newClusters = new ArrayList<>();
+        List<ClusterEntity> newClusterEntities = new ArrayList<>();
 
-        Optional<Cluster> optionalParentCluster = clusterRepository.findFirstByStatusOrderByLevelAsc(Cluster.Status.CAL_COMPLETED);
-        Cluster parentCluster;
+        Optional<ClusterEntity> optionalParentCluster = clusterRepository.findFirstByStatusOrderByLevelAsc(ClusterEntity.Status.CAL_COMPLETED);
+        ClusterEntity parentClusterEntity;
 
         if (optionalParentCluster.isEmpty()){
             logger.error("No CAL_COMPLETED Cluster");
             return;
         }
         else {
-            parentCluster = optionalParentCluster.get();
+            parentClusterEntity = optionalParentCluster.get();
         }
 
         // 클러스터 분할
-        List<Cluster> subClusters = splitCluster(parentCluster);
-        newClusters.addAll(subClusters);
+        List<ClusterEntity> subClusterEntities = splitCluster(parentClusterEntity);
+        newClusterEntities.addAll(subClusterEntities);
 
         // 새로운 클러스터를 저장
-        clusterRepository.saveAll(newClusters);
+        clusterRepository.saveAll(newClusterEntities);
 
         // 부모 클러스터
-        parentCluster.setStatus(Cluster.Status.SPLIT_COMPLETED);
-        clusterRepository.save(parentCluster);
+        parentClusterEntity.setStatus(ClusterEntity.Status.SPLIT_COMPLETED);
+        clusterRepository.save(parentClusterEntity);
     }
 
     // 최대 분할 수준 설정 (필요에 따라 조정)
@@ -147,18 +147,18 @@ public class ClusterService {
     }
 
     // 클러스터 분할 메소드
-    private List<Cluster> splitCluster(Cluster parentCluster) {
-        List<Cluster> subClusters = new ArrayList<>();
+    private List<ClusterEntity> splitCluster(ClusterEntity parentClusterEntity) {
+        List<ClusterEntity> subClusterEntities = new ArrayList<>();
 
-        double minLat = parentCluster.getMinLatitude();
-        double maxLat = parentCluster.getMaxLatitude();
-        double minLon = parentCluster.getMinLongitude();
-        double maxLon = parentCluster.getMaxLongitude();
+        double minLat = parentClusterEntity.getMinLatitude();
+        double maxLat = parentClusterEntity.getMaxLatitude();
+        double minLon = parentClusterEntity.getMinLongitude();
+        double maxLon = parentClusterEntity.getMaxLongitude();
 
         double midLat = (minLat + maxLat) / 2;
         double midLon = (minLon + maxLon) / 2;
 
-        int nextLevel = parentCluster.getLevel() + 1;
+        int nextLevel = parentClusterEntity.getLevel() + 1;
 
         for (int i = 0; i < 4; i++) {
             double subMinLat = (i / 2 == 0) ? minLat : midLat;
@@ -166,7 +166,7 @@ public class ClusterService {
             double subMinLon = (i % 2 == 0) ? minLon : midLon;
             double subMaxLon = (i % 2 == 0) ? midLon : maxLon;
 
-            String subClusterId = generateClusterId(parentCluster.getId(), i);
+            String subClusterId = generateClusterId(parentClusterEntity.getId(), i);
             //long subClusterId = (parentCluster.getId() << 2) | i;
 
 
@@ -178,29 +178,29 @@ public class ClusterService {
             // 부모 클러스터의 ID를 왼쪽으로 2비트 시프트하고 자식의 Morton 코드 추가
              //subClusterId = (parentCluster.getId() << 2) | subMortonCode;
 
-            Cluster subCluster = new Cluster();
-            subCluster.setId(subClusterId);
-            subCluster.setLevel(nextLevel);
-            subCluster.setMinLatitude(subMinLat);
-            subCluster.setMaxLatitude(subMaxLat);
-            subCluster.setMinLongitude(subMinLon);
-            subCluster.setMaxLongitude(subMaxLon);
-            subCluster.setStatus(Cluster.Status.PENDING);
-            subCluster.setParentId(parentCluster.getId());
-            subCluster.setCreatedAt(LocalDateTime.now());
+            ClusterEntity subClusterEntity = new ClusterEntity();
+            subClusterEntity.setId(subClusterId);
+            subClusterEntity.setLevel(nextLevel);
+            subClusterEntity.setMinLatitude(subMinLat);
+            subClusterEntity.setMaxLatitude(subMaxLat);
+            subClusterEntity.setMinLongitude(subMinLon);
+            subClusterEntity.setMaxLongitude(subMaxLon);
+            subClusterEntity.setStatus(ClusterEntity.Status.PENDING);
+            subClusterEntity.setParentId(parentClusterEntity.getId());
+            subClusterEntity.setCreatedAt(LocalDateTime.now());
 
-            subClusters.add(subCluster);
+            subClusterEntities.add(subClusterEntity);
         }
 
-        return subClusters;
+        return subClusterEntities;
     }
 
     //좌표로 클러스터 찾기
-    public Cluster findClusterByCoordinates(double latitude, double longitude) {
+    public ClusterEntity findClusterByCoordinates(double latitude, double longitude) {
         String clusterId = findClusterIdByCoordinates(latitude, longitude);
-        Cluster cluster = clusterRepository.findById(clusterId).orElse(null);
-        if (cluster != null) {
-            return cluster;
+        ClusterEntity clusterEntity = clusterRepository.findById(clusterId).orElse(null);
+        if (clusterEntity != null) {
+            return clusterEntity;
         } else {
             logger.error("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
             throw new NotFoundException("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
@@ -232,7 +232,7 @@ public class ClusterService {
 
             clusterId = generateClusterId(clusterId, index);
 
-            Optional<Cluster> clusterOpt = clusterRepository.findByIdAndStatusNot(clusterId, Cluster.Status.PENDING);
+            Optional<ClusterEntity> clusterOpt = clusterRepository.findByIdAndStatusNot(clusterId, ClusterEntity.Status.PENDING);
             if (clusterOpt.isEmpty()) {
                 // 존재하지 않으면 이전 레벨의 클러스터 ID 반환
                 return clusterId.substring(0, clusterId.lastIndexOf('-'));
@@ -306,9 +306,9 @@ public class ClusterService {
 
     // 좌표를 기반으로 기회 비용을 조회하는 메소드
     public double getOpportunityCostByCoordinates(double latitude, double longitude) {
-        Cluster cluster = findClusterByCoordinates(latitude, longitude);
-        if (cluster != null) {
-            logger.info(cluster.toString());
+        ClusterEntity clusterEntity = findClusterByCoordinates(latitude, longitude);
+        if (clusterEntity != null) {
+            logger.info(clusterEntity.toString());
             return 0;
         } else {
             throw new RuntimeException("해당 좌표에 대한 기회 비용을 찾을 수 없습니다.");

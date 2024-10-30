@@ -1,14 +1,14 @@
 package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.GoingWorkDTO;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.entity.LivingOpportunityDynamo;
-import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.dto.GoingWorkDTO;
+import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.BatchServiceOld;
-import com.enm.whereToLive.service.dabang.DabangService;
-import com.enm.whereToLive.service.whenToGo.WhenToGoService;
+import com.enm.whereToLive.api.dabang.service.DabangService;
+import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ public class BatchServiceImpl implements BatchServiceOld {
     private LivingOpportunityRepository livingOpportunityRepository;
 
     @Autowired
-    public BatchServiceImpl(StationService stationService, DabangService dabangService, com.enm.whereToLive.service.whenToGo.WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository) {
+    public BatchServiceImpl(StationService stationService, DabangService dabangService, WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;
@@ -41,7 +41,7 @@ public class BatchServiceImpl implements BatchServiceOld {
     }
 
     public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination){
-        ArrayList<LivingOpportunityDynamo> livingOpportunities = new ArrayList<>();
+        ArrayList<LivingOpportunityEntityDynamo> livingOpportunities = new ArrayList<>();
 
         for(Station station:stationList) {
 
@@ -62,22 +62,22 @@ public class BatchServiceImpl implements BatchServiceOld {
                 );
 
                 //test
-                LivingOpportunityDynamo livingOpportunityDynamo = new LivingOpportunityDynamo();
-                livingOpportunityDynamo.setDestination(destination.getName());
-                livingOpportunityDynamo.setStationID(station.getId());
-                livingOpportunityDynamo.setTotalOpportunityCost(monthlyTotalOpportunity);
-                livingOpportunityDynamo.setCommuteCost(monthlyGoingWorkOpportunity);
-                livingOpportunityDynamo.setCommuteTime(goingWorkDTO.getDuration());
-                livingOpportunityDynamo.setStationName(station.getName());
-                livingOpportunityDynamo.setLine(station.getLine());
-                livingOpportunityDynamo.setLatitude(destination.getLat());
-                livingOpportunityDynamo.setLongitude(destination.getLng());
-                livingOpportunityDynamo.setRentCost(monthlyRent);
+                LivingOpportunityEntityDynamo livingOpportunityEntityDynamo = new LivingOpportunityEntityDynamo();
+                livingOpportunityEntityDynamo.setDestination(destination.getName());
+                livingOpportunityEntityDynamo.setStationID(station.getId());
+                livingOpportunityEntityDynamo.setTotalOpportunityCost(monthlyTotalOpportunity);
+                livingOpportunityEntityDynamo.setCommuteCost(monthlyGoingWorkOpportunity);
+                livingOpportunityEntityDynamo.setCommuteTime(goingWorkDTO.getDuration());
+                livingOpportunityEntityDynamo.setStationName(station.getName());
+                livingOpportunityEntityDynamo.setLine(station.getLine());
+                livingOpportunityEntityDynamo.setLatitude(destination.getLat());
+                livingOpportunityEntityDynamo.setLongitude(destination.getLng());
+                livingOpportunityEntityDynamo.setRentCost(monthlyRent);
 
                 //임시
-                livingOpportunityRepository.save(livingOpportunityDynamo);
+                livingOpportunityRepository.save(livingOpportunityEntityDynamo);
 
-                livingOpportunities.add(livingOpportunityDynamo);
+                livingOpportunities.add(livingOpportunityEntityDynamo);
             }
             else{
                 System.out.println(

@@ -1,6 +1,6 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.data.Station;
+import com.enm.whereToLive.model.Station;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 

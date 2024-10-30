@@ -1,7 +1,7 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.data.opportunityResponseDTO;
-import com.enm.whereToLive.data.opportunityResponseDTO2;
+import com.enm.whereToLive.dto.opportunityResponseDTO;
+import com.enm.whereToLive.dto.opportunityResponseDTO2;
 
 public interface WhereToLiveService {
 

@@ -1,15 +1,15 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.GoingWorkDTO;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.cluster.Cluster;
-import com.enm.whereToLive.data.cluster.LivingOpportunityMySQL;
-import com.enm.whereToLive.data.cluster.LivingOpportunityMySQLID;
-import com.enm.whereToLive.data.entity.LivingOpportunityDynamo;
-import com.enm.whereToLive.data.repository.ClusterRepository;
-import com.enm.whereToLive.data.repository.LivingOpportunityRepository2;
-import com.enm.whereToLive.service.whenToGo.WhenToGoService;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.dto.GoingWorkDTO;
+import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
+import com.enm.whereToLive.entity.LivingOpportunityEntityMySQLID;
+import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.repository.mysql.ClusterRepository;
+import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
+import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +45,12 @@ public class BatchProcessingService {
 
         while (true) {
             // 진행 중 종료된 클러스터 가져오기
-            Optional<Cluster> optionalNewCluster = clusterRepository.findFirstByStatus(Cluster.Status.PROCESSING);
-            Cluster newCluster;
+            Optional<ClusterEntity> optionalNewCluster = clusterRepository.findFirstByStatus(ClusterEntity.Status.PROCESSING);
+            ClusterEntity newClusterEntity;
 
             // 대기중인 클러스터 가져오기
             if(optionalNewCluster.isEmpty()) {
-                optionalNewCluster = clusterRepository.findFirstByStatus(Cluster.Status.PENDING);
+                optionalNewCluster = clusterRepository.findFirstByStatus(ClusterEntity.Status.PENDING);
             }
             if (optionalNewCluster.isEmpty()){
                 logger.info("No PENDING Cluster, so Generate Cluster");
@@ -60,21 +60,21 @@ public class BatchProcessingService {
                 continue;
             }
             else {
-                newCluster = optionalNewCluster.get();
+                newClusterEntity = optionalNewCluster.get();
             }
 
             // 3. 기회 비용 계산 및 저장
-            newCluster.setStatus(Cluster.Status.PROCESSING);
-            clusterRepository.save(newCluster);
+            newClusterEntity.setStatus(ClusterEntity.Status.PROCESSING);
+            clusterRepository.save(newClusterEntity);
 
-            double centerLat = (newCluster.getMinLatitude() + newCluster.getMaxLatitude()) / 2;
-            double centerLon = (newCluster.getMinLongitude() + newCluster.getMaxLongitude()) / 2;
+            double centerLat = (newClusterEntity.getMinLatitude() + newClusterEntity.getMaxLatitude()) / 2;
+            double centerLon = (newClusterEntity.getMinLongitude() + newClusterEntity.getMaxLongitude()) / 2;
 
-            Destination destination = new Destination(newCluster.getId(), centerLat, centerLon);
+            Destination destination = new Destination(newClusterEntity.getId(), centerLat, centerLon);
             batchMakeOpportunity(destination);
 
-            newCluster.setStatus(Cluster.Status.CAL_COMPLETED);
-            clusterRepository.save(newCluster);
+            newClusterEntity.setStatus(ClusterEntity.Status.CAL_COMPLETED);
+            clusterRepository.save(newClusterEntity);
         }
     }
 
@@ -89,7 +89,7 @@ public class BatchProcessingService {
     }
 
     public void makeStationsTotalOpportunity(ArrayList<Station> stationList, Destination destination){
-        ArrayList<LivingOpportunityDynamo> livingOpportunities = new ArrayList<>();
+        ArrayList<LivingOpportunityEntityDynamo> livingOpportunities = new ArrayList<>();
 
         for(Station station:stationList) {
 
@@ -108,9 +108,9 @@ public class BatchProcessingService {
                 );
 
                 //test
-                LivingOpportunityMySQL livingOpportunity = new LivingOpportunityMySQL();
+                LivingOpportunityEntityMySQL livingOpportunity = new LivingOpportunityEntityMySQL();
 
-                LivingOpportunityMySQLID livingOpportunityId = new LivingOpportunityMySQLID();
+                LivingOpportunityEntityMySQLID livingOpportunityId = new LivingOpportunityEntityMySQLID();
                 livingOpportunityId.setDestination(destination.getName());
                 livingOpportunityId.setStationId(station.getId());
 

@@ -1,19 +1,19 @@
 package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.cluster.Cluster;
-import com.enm.whereToLive.data.cluster.LivingOpportunityMySQL;
-import com.enm.whereToLive.data.entity.LivingOpportunityDynamo;
-import com.enm.whereToLive.data.dynamoDBRepository.LivingOpportunityRepository;
-import com.enm.whereToLive.data.opportunityResponseDTO;
-import com.enm.whereToLive.data.opportunityResponseDTO2;
-import com.enm.whereToLive.data.repository.LivingOpportunityRepository2;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
+import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
+import com.enm.whereToLive.dto.opportunityResponseDTO;
+import com.enm.whereToLive.dto.opportunityResponseDTO2;
+import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.ClusterService;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.WhereToLiveService;
-import com.enm.whereToLive.service.dabang.DabangService;
-import com.enm.whereToLive.service.whenToGo.WhenToGoService;
+import com.enm.whereToLive.api.dabang.service.DabangService;
+import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,17 +50,17 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     public opportunityResponseDTO getPlaceOpportunity(double latitude, Double longitude, int workDays) {
         opportunityResponseDTO opportunityResponseDTO = new opportunityResponseDTO();
 
-        Cluster cluster = clusterService.findClusterByCoordinates(latitude, longitude);
+        ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(latitude, longitude);
 
-        logger.info(cluster.toString());
+        logger.info(clusterEntity.toString());
 
-        List<LivingOpportunityMySQL> livingOpportunities = livingOpportunityRepository2.findByIdDestination(cluster.getId());
+        List<LivingOpportunityEntityMySQL> livingOpportunities = livingOpportunityRepository2.findByIdDestination(clusterEntity.getId());
 
 
 
-        Destination destination = new Destination(cluster.getId(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
+        Destination destination = new Destination(clusterEntity.getId(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 
-        for(LivingOpportunityMySQL livingOpportunity : livingOpportunities) {
+        for(LivingOpportunityEntityMySQL livingOpportunity : livingOpportunities) {
             Station station = stationService.getStationById(livingOpportunity.getId().getStationId());
 
             livingOpportunity.setLatitude(station.getLatitude());
@@ -81,16 +81,16 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     public opportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays) {
         opportunityResponseDTO2 opportunityResponseDTO = new opportunityResponseDTO2();
 
-        List<LivingOpportunityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(name);
+        List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(name);
         Destination destination = new Destination(name, livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 
-        for(LivingOpportunityDynamo livingOpportunityDynamo : livingOpportunities) {
-            Station station = stationService.getStationById(livingOpportunityDynamo.getStationID());
+        for(LivingOpportunityEntityDynamo livingOpportunityEntityDynamo : livingOpportunities) {
+            Station station = stationService.getStationById(livingOpportunityEntityDynamo.getStationID());
 
-            livingOpportunityDynamo.setLatitude(station.getLatitude());
-            livingOpportunityDynamo.setLongitude(station.getLongitude());
-            livingOpportunityDynamo.setPros(station.getPros());
-            livingOpportunityDynamo.setCons(station.getCons());
+            livingOpportunityEntityDynamo.setLatitude(station.getLatitude());
+            livingOpportunityEntityDynamo.setLongitude(station.getLongitude());
+            livingOpportunityEntityDynamo.setPros(station.getPros());
+            livingOpportunityEntityDynamo.setCons(station.getCons());
         }
 
         livingOpportunities = calPlaceOpportunity2(livingOpportunities, workDays);
@@ -101,11 +101,11 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
         return opportunityResponseDTO;
     }
 
-    private List<LivingOpportunityMySQL> calPlaceOpportunity(List<LivingOpportunityMySQL> livingOpportunities, int workDays) {
+    private List<LivingOpportunityEntityMySQL> calPlaceOpportunity(List<LivingOpportunityEntityMySQL> livingOpportunities, int workDays) {
         // PaginatedList를 ArrayList로 복사
-        List<LivingOpportunityMySQL> opportunityList = new ArrayList<>(livingOpportunities);
+        List<LivingOpportunityEntityMySQL> opportunityList = new ArrayList<>(livingOpportunities);
 
-        for (LivingOpportunityMySQL opportunity : opportunityList) {
+        for (LivingOpportunityEntityMySQL opportunity : opportunityList) {
             // commuteCost 계산 및 할당
             int commuteCost = (int) (opportunity.getCommuteCost() * ((double) workDays / 5));
             opportunity.setCommuteCost(commuteCost);
@@ -116,16 +116,16 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
         }
 
         // totalOpportunityCost를 기준으로 정렬
-        opportunityList.sort(Comparator.comparingInt(LivingOpportunityMySQL::getTotalOpportunityCost));
+        opportunityList.sort(Comparator.comparingInt(LivingOpportunityEntityMySQL::getTotalOpportunityCost));
 
         return opportunityList;
     }
 
-    private List<LivingOpportunityDynamo> calPlaceOpportunity2(List<LivingOpportunityDynamo> livingOpportunities, int workDays) {
+    private List<LivingOpportunityEntityDynamo> calPlaceOpportunity2(List<LivingOpportunityEntityDynamo> livingOpportunities, int workDays) {
         // PaginatedList를 ArrayList로 복사
-        List<LivingOpportunityDynamo> opportunityList = new ArrayList<>(livingOpportunities);
+        List<LivingOpportunityEntityDynamo> opportunityList = new ArrayList<>(livingOpportunities);
 
-        for (LivingOpportunityDynamo opportunity : opportunityList) {
+        for (LivingOpportunityEntityDynamo opportunity : opportunityList) {
             // commuteCost 계산 및 할당
             int commuteCost = (int) (opportunity.getCommuteCost() * ((double) workDays / 5));
             opportunity.setCommuteCost(commuteCost);
@@ -136,7 +136,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
         }
 
         // totalOpportunityCost를 기준으로 정렬
-        opportunityList.sort(Comparator.comparingInt(LivingOpportunityDynamo::getTotalOpportunityCost));
+        opportunityList.sort(Comparator.comparingInt(LivingOpportunityEntityDynamo::getTotalOpportunityCost));
 
         return opportunityList;
     }

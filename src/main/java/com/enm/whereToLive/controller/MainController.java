@@ -1,9 +1,9 @@
 package com.enm.whereToLive.controller;
 
-import com.enm.whereToLive.data.Destination;
-import com.enm.whereToLive.data.Station;
-import com.enm.whereToLive.data.opportunityResponseDTO;
-import com.enm.whereToLive.data.opportunityResponseDTO2;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.dto.opportunityResponseDTO;
+import com.enm.whereToLive.dto.opportunityResponseDTO2;
 import com.enm.whereToLive.service.BatchServiceOld;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;

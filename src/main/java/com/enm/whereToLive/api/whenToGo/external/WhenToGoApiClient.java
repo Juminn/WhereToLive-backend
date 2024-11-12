@@ -5,6 +5,7 @@ import com.enm.whereToLive.api.whenToGo.dto.WhenToGoResponseDTO;
 import com.enm.whereToLive.api.dabang.service.UtilService;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
 @Service
+@Slf4j
 public class WhenToGoApiClient {
 
     private WebClient webClient;
@@ -61,7 +63,7 @@ public class WhenToGoApiClient {
 
     private static ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-            System.out.println("Request: " + clientRequest.method() + " " + clientRequest.url());
+            log.info("Request: " + clientRequest.method() + " " + clientRequest.url());
             clientRequest.headers().forEach((name, values) ->
                     values.forEach(value -> System.out.println(name + ": " + value)));
             return Mono.just(clientRequest);

@@ -10,6 +10,8 @@ import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class BatchProcessingService {
 
     @Autowired
@@ -36,8 +39,6 @@ public class BatchProcessingService {
     @Autowired
     private StationService stationService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
-
     // 매일 자정에 실행
     //@Scheduled(cron = "0 0 0 * * *")
     //@PostConstruct
@@ -53,7 +54,7 @@ public class BatchProcessingService {
                 optionalNewCluster = clusterRepository.findFirstByStatus(ClusterEntity.Status.PENDING);
             }
             if (optionalNewCluster.isEmpty()){
-                logger.info("No PENDING Cluster, so Generate Cluster");
+                log.info("No PENDING Cluster, so Generate Cluster");
 
                 // 클러스터 분할 및 생성
                 clusterService.generateDailyClusters();
@@ -100,7 +101,7 @@ public class BatchProcessingService {
                 int monthlyRent = station.getMontlyRent().intValue();
                 int monthlyTotalOpportunity = monthlyGoingWorkOpportunity + monthlyRent;
 
-                System.out.println("stationID: " + station.getId() +
+                log.info("stationID: " + station.getId() +
                         "totalOpportunity: " + monthlyTotalOpportunity +
                         " monthlyGoingWorkOpportunity: " + monthlyGoingWorkOpportunity +
                         " monthlyRent: " + monthlyRent +

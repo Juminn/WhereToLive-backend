@@ -4,10 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +22,15 @@ public class LoggingAspect {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final int MAX_RETURN_VALUE_LENGTH = 1000; // 리턴 값 최대 길이
 
+    //컨트롤러 포인트 컷
     @Pointcut("execution(* com.enm.whereToLive.controller..*.*(..))")
     private void cut() {}
+
+    // 새로운 포인트컷: 서비스와 리포지토리 메서드
+    @Pointcut("execution(* com.enm.whereToLive.service..*.*(..)) && " +
+            "!execution(* com.enm.whereToLive.service.StationService.*(..)) || " +
+            "execution(* com.enm.whereToLive.repository..*.*(..))")
+    private void serviceAndRepositoryCut() {}
 
     @Before("cut()")
     public void beforeParameterLog(JoinPoint joinPoint) {
@@ -37,6 +42,11 @@ public class LoggingAspect {
     public void afterReturnLog(JoinPoint joinPoint, Object returnObj) {
         Method method = getMethod(joinPoint);
         logMethodExit(returnObj, method);
+    }
+
+    @Around("serviceAndRepositoryCut()")
+    public Object aroundLogServiceAndRepository(ProceedingJoinPoint joinPoint) throws Throwable {
+        return logExecutionTime(joinPoint);
     }
 
     private void logMethodEntry(Method method, Object[] args) {
@@ -73,5 +83,18 @@ public class LoggingAspect {
     private Method getMethod(JoinPoint joinPoint) {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         return signature.getMethod();
+    }
+
+    private Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        Method method = getMethod(joinPoint);
+        long startTime = System.currentTimeMillis(); // 시작 시간 기록
+
+        // 메서드 실행
+        Object returnObj = joinPoint.proceed();
+
+        long executionTime = System.currentTimeMillis() - startTime; // 실행 시간 계산
+        log.info("Executed {}.{} in {} ms", method.getDeclaringClass().getSimpleName(), method.getName(), executionTime);
+
+        return returnObj; // 메서드의 반환값 반환
     }
 }

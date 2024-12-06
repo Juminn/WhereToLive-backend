@@ -1,9 +1,11 @@
 package com.enm.whereToLive.controller;
 
+import com.enm.whereToLive.dto.OpportunityRequestDTO;
+import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
-import com.enm.whereToLive.dto.opportunityResponseDTO;
-import com.enm.whereToLive.dto.opportunityResponseDTO2;
+import com.enm.whereToLive.dto.OpportunityResponseDTO;
+import com.enm.whereToLive.dto.OpportunityResponseDTO2;
 import com.enm.whereToLive.service.BatchServiceOld;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
@@ -46,13 +48,13 @@ public class MainController {
     }
 
     @GetMapping("/opportunity")
-    public opportunityResponseDTO opportunity(@RequestParam double latitude, @RequestParam Double longitude, @RequestParam int workdays) throws Exception {
+    public OpportunityResponseDTO opportunity(OpportunityRequestDTO opportunityRequestDTO) throws Exception, ClusterNotFoundException {
         
-        return whereToLiveService.getPlaceOpportunity(latitude, longitude, workdays);
+        return whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
     }
 
     @GetMapping("/opportunity2")
-    public opportunityResponseDTO2 opportunity2(@RequestParam String company, @RequestParam int workdays) throws Exception {
+    public OpportunityResponseDTO2 opportunity2(@RequestParam String company, @RequestParam int workdays) throws Exception {
 
         return whereToLiveService.getPlaceOpportunity2(company, workdays);
     }

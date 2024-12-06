@@ -6,10 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class GoingWorkDTO {
-    int cost;
-    int duration;
+@NoArgsConstructor
+@AllArgsConstructor
+public class OpportunityRequestDTO {
+
+    double latitude;
+    double longitude;
+    int workDays;
 }

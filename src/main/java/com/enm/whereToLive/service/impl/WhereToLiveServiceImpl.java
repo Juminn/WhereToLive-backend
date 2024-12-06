@@ -1,13 +1,15 @@
 package com.enm.whereToLive.service.impl;
 
+import com.enm.whereToLive.dto.OpportunityRequestDTO;
+import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
 import com.enm.whereToLive.entity.ClusterEntity;
 import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
 import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
-import com.enm.whereToLive.dto.opportunityResponseDTO;
-import com.enm.whereToLive.dto.opportunityResponseDTO2;
+import com.enm.whereToLive.dto.OpportunityResponseDTO;
+import com.enm.whereToLive.dto.OpportunityResponseDTO2;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.ClusterService;
 import com.enm.whereToLive.service.StationService;
@@ -47,10 +49,10 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public opportunityResponseDTO getPlaceOpportunity(double latitude, Double longitude, int workDays) {
-        opportunityResponseDTO opportunityResponseDTO = new opportunityResponseDTO();
+    public OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO) throws ClusterNotFoundException {
+        OpportunityResponseDTO opportunityResponseDTO = new OpportunityResponseDTO();
 
-        ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(latitude, longitude);
+        ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(opportunityRequestDTO.getLatitude(), opportunityRequestDTO.getLongitude());
 
         logger.info(clusterEntity.toString());
 
@@ -69,7 +71,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
             livingOpportunity.setCons(station.getCons());
         }
 
-        livingOpportunities = calPlaceOpportunity(livingOpportunities, workDays);
+        livingOpportunities = calPlaceOpportunity(livingOpportunities, opportunityRequestDTO.getWorkDays());
 
         opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
         opportunityResponseDTO.setDestination(destination);
@@ -78,8 +80,8 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public opportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays) {
-        opportunityResponseDTO2 opportunityResponseDTO = new opportunityResponseDTO2();
+    public OpportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays) {
+        OpportunityResponseDTO2 opportunityResponseDTO = new OpportunityResponseDTO2();
 
         List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(name);
         Destination destination = new Destination(name, livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());

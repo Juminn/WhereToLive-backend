@@ -1,4 +1,4 @@
-package com.enm.whereToLive.mytest;
+package com.enm.whereToLive.unit.mytest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

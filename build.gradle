@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'jacoco' // JaCoCo 플러그인 추가
 }
 
 group = 'com.enm'
@@ -16,6 +17,22 @@ java {
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
+	}
+}
+
+jacoco {
+	toolVersion = "0.8.7" // JaCoCo 버전 설정
+}
+
+tasks.named('test') {
+	finalizedBy jacocoTestReport // 테스트 후 JaCoCo 리포트 생성
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = true // XML 리포트 생성
+		csv.required = false // CSV 리포트 비활성화
+		html.required = true // HTML 리포트 생성
 	}
 }
 

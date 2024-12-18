@@ -58,8 +58,6 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
 
         List<LivingOpportunityEntityMySQL> livingOpportunities = livingOpportunityRepository2.findByIdDestination(clusterEntity.getId());
 
-
-
         Destination destination = new Destination(clusterEntity.getId(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 
         for(LivingOpportunityEntityMySQL livingOpportunity : livingOpportunities) {

@@ -4,10 +4,13 @@ import ch.qos.logback.core.testUtil.MockInitialContext;
 import com.enm.whereToLive.api.dabang.service.DabangService;
 import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.OpportunityResponseDTO;
 import com.enm.whereToLive.entity.ClusterEntity;
 import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
 import com.enm.whereToLive.entity.LivingOpportunityEntityMySQLID;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
+import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.model.Station;
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.ClusterService;
@@ -25,6 +28,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -57,10 +61,27 @@ class WhereToLiveServiceTest {
     @MockBean
     ClusterService clusterService;
 
+    List<Station> stations;
+
     // Test를 실행하기 전마다 MemberService에 가짜 객체를 주입시켜준다.
     @BeforeEach
     void setUp(){
         whereToLiveService = new WhereToLiveServiceImpl(stationService, dabangService, whenToGoService, livingOpportunityRepository, livingOpportunityRepository2, clusterService);
+        stations = generateTestStations(700); // 700개 Station 객체 생성
+    }
+
+    private List<Station> generateTestStations(int count) {
+        List<Station> stationList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Station station = new Station();
+            station.setId(i); // 고유 ID 설정
+            station.setLatitude(37.545348562499996); // 예시 위도
+            station.setLongitude(126.81842368750002); // 예시 경도
+            station.setPros("Pros for station " + i);
+            station.setCons("Cons for station " + i);
+            stationList.add(station);
+        }
+        return stationList;
     }
 
     @Test
@@ -116,17 +137,28 @@ class WhereToLiveServiceTest {
         Mockito.when(livingOpportunityRepository2.findByIdDestination(clusterId)).thenReturn(livingOpportunityEntityMySQLS);
 
         //StationService세팅
+        // Station 응답 설정
+        for (LivingOpportunityEntityMySQL opportunity : livingOpportunityEntityMySQLS) {
+            Station station = stations.get(opportunity.getId().getStationId() % 700); // 700개 중 하나 선택
+            Mockito.when(stationService.getStationById(opportunity.getId().getStationId())).thenReturn(station);
+        }
 
 
         /*
         when
          */
-        //whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
+        OpportunityResponseDTO responseDTO = whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
 
         /*
         then
          */
-        //assertThat(hi3).isEqualTo(3L);
+
+        // Destination 검증
+        Destination destination = responseDTO.getDestination();
+        assertNotNull(destination, "Destination should not be null");
+        assertEquals(clusterEntity.getId(), destination.getName(), "Destination ID should match cluster ID");
+        assertEquals(livingOpportunityEntityMySQLS.get(0).getLatitude(), destination.getLat(), "Destination latitude should match");
+        assertEquals(livingOpportunityEntityMySQLS.get(0).getLongitude(), destination.getLng(), "Destination longitude should match");
     }
 
 }

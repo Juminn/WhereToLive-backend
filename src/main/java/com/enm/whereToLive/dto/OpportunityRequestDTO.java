@@ -13,5 +13,5 @@ public class OpportunityRequestDTO {
 
     double latitude;
     double longitude;
-    int workDays;
+    int workdays;
 }

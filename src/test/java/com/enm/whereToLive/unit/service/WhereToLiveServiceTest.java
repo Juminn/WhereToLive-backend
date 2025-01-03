@@ -1,6 +1,5 @@
 package com.enm.whereToLive.unit.service;
 
-import ch.qos.logback.core.testUtil.MockInitialContext;
 import com.enm.whereToLive.api.dabang.service.DabangService;
 import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
@@ -22,14 +21,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -99,7 +95,7 @@ class WhereToLiveServiceTest {
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
                 .latitude(latitude)
                 .longitude(longtitude)
-                .workDays(workdays)
+                .workdays(workdays)
                 .build();
 
         ClusterEntity clusterEntity = ClusterEntity.builder()

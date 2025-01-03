@@ -31,7 +31,7 @@ public class WhereToLiveServiceIntegrationTest {
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
                 .latitude(37.545348562499996)
                 .longitude(126.81842368750002)
-                .workDays(5)
+                .workdays(5)
                 .build();
 
         /*

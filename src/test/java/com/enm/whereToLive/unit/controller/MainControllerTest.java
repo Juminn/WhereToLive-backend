@@ -21,10 +21,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @WebMvcTest(MainController.class)
 class MainControllerTest {
 
@@ -59,7 +55,7 @@ class MainControllerTest {
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
                 .latitude(123)
                 .longitude(456)
-                .workDays(5)
+                .workdays(5)
                 .build();
 
         OpportunityResponseDTO opportunityResponseDTO = OpportunityResponseDTO.builder()

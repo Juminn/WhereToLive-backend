@@ -1,12 +1,8 @@
 package com.enm.whereToLive.integration.service;
 
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
-import com.enm.whereToLive.dto.OpportunityResponseDTO;
-import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.service.StationService;
-import com.enm.whereToLive.service.WhereToLiveService;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,7 +28,7 @@ public class StationServiceIntegrationTest {
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
                 .latitude(37.545348562499996)
                 .longitude(126.81842368750002)
-                .workDays(5)
+                .workdays(5)
                 .build();
 
         //stationService.getStationById()

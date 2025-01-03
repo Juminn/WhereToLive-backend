@@ -69,7 +69,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
             livingOpportunity.setCons(station.getCons());
         }
 
-        livingOpportunities = calPlaceOpportunity(livingOpportunities, opportunityRequestDTO.getWorkDays());
+        livingOpportunities = calPlaceOpportunity(livingOpportunities, opportunityRequestDTO.getWorkdays());
 
         opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
         opportunityResponseDTO.setDestination(destination);

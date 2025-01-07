@@ -4,7 +4,7 @@ import com.enm.whereToLive.controller.MainController;
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
 import com.enm.whereToLive.dto.OpportunityResponseDTO;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
-import com.enm.whereToLive.service.BatchServiceOld;
+import com.enm.whereToLive.service.BatchDabangAndManual;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
@@ -28,7 +28,7 @@ class MainControllerTest {
     MockMvc mvc;
 
     @MockBean
-    private BatchServiceOld batchService;
+    private BatchDabangAndManual batchService;
 
     @MockBean
     private WhereToLiveService whereToLiveService;

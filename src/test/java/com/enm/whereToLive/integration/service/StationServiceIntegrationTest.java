@@ -3,6 +3,7 @@ package com.enm.whereToLive.integration.service;
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
 import com.enm.whereToLive.service.StationService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +20,7 @@ public class StationServiceIntegrationTest {
 
     @Test
     @Transactional
+    @DisplayName("기본")
     void myTest() {
 
         /*

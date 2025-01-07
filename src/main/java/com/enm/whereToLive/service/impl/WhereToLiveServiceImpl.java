@@ -1,6 +1,7 @@
 package com.enm.whereToLive.service.impl;
 
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.OpportunityRequestDTO2;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
@@ -78,11 +79,11 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public OpportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays) {
+    public OpportunityResponseDTO2 getPlaceOpportunity2(OpportunityRequestDTO2 opportunityRequestDTO2) {
         OpportunityResponseDTO2 opportunityResponseDTO = new OpportunityResponseDTO2();
 
-        List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(name);
-        Destination destination = new Destination(name, livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
+        List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(opportunityRequestDTO2.getCompany());
+        Destination destination = new Destination(opportunityRequestDTO2.getCompany(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 
         for(LivingOpportunityEntityDynamo livingOpportunityEntityDynamo : livingOpportunities) {
             Station station = stationService.getStationById(livingOpportunityEntityDynamo.getStationID());
@@ -93,7 +94,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
             livingOpportunityEntityDynamo.setCons(station.getCons());
         }
 
-        livingOpportunities = calPlaceOpportunity2(livingOpportunities, workDays);
+        livingOpportunities = calPlaceOpportunity2(livingOpportunities, opportunityRequestDTO2.getWorkdays());
 
         opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
         opportunityResponseDTO.setDestination(destination);

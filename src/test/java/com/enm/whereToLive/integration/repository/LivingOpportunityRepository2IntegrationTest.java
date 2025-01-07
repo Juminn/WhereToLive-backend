@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
+@DisplayName("통합테스트::리포지토리::LivingOpportunityRepository2")
 public class LivingOpportunityRepository2IntegrationTest {
 
     private final LivingOpportunityRepository2 livingOpportunityRepository2;
@@ -26,7 +27,7 @@ public class LivingOpportunityRepository2IntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("기본")
+    @DisplayName("findByIdDestination::실제 정상케이스")
     void myTest() {
 
         /*

@@ -8,7 +8,7 @@ import com.enm.whereToLive.exception.ClusterNotFoundException;
 
 public interface WhereToLiveService {
 
-    OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO) throws Exception, ClusterNotFoundException;
+    OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO);
 
     OpportunityResponseDTO2 getPlaceOpportunity2(OpportunityRequestDTO2 opportunityRequestDTO2);
 }

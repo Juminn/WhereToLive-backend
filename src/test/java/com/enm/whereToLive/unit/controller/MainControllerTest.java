@@ -10,6 +10,7 @@ import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(MainController.class)
+@DisplayName("단위테스트::컨트롤러::MainController")
 class MainControllerTest {
 
     @Autowired
@@ -48,7 +50,8 @@ class MainControllerTest {
     }
     
     @Test
-    void opportunity() throws ClusterNotFoundException, Exception {
+    @DisplayName("Get::/opportunity::정상 케이스")
+    void opportunity() throws Exception {
         /*
         given
          */

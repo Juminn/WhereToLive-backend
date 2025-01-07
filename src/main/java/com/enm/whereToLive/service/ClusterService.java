@@ -205,7 +205,7 @@ public class ClusterService {
             return clusterEntity;
         } else {
             log.error("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
-            throw new NotFoundException("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
+            throw new ClusterNotFoundException("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
         }
 
     }

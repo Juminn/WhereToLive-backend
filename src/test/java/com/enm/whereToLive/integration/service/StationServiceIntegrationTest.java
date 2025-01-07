@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@DisplayName("통합테스트::서비스::StationService")
 public class StationServiceIntegrationTest {
 
     private final StationService stationService;
@@ -16,34 +17,6 @@ public class StationServiceIntegrationTest {
     @Autowired
     public StationServiceIntegrationTest(StationService stationService) {
         this.stationService = stationService;
-    }
-
-    @Test
-    @Transactional
-    @DisplayName("기본")
-    void myTest() {
-
-        /*
-        given
-        */
-        //IDT위치
-        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
-                .latitude(37.545348562499996)
-                .longitude(126.81842368750002)
-                .workdays(5)
-                .build();
-
-        //stationService.getStationById()
-
-        /*
-        when then
-        */
-
-//        OpportunityResponseDTO opportunityResponseDTO = whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
-//
-//        System.out.println(opportunityResponseDTO);
-//
-//        Assertions.assertEquals(opportunityResponseDTO.getDestination().getName(), "0-2-3" );
     }
 
 }

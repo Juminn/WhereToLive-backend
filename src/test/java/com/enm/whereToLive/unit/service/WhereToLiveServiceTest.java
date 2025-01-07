@@ -8,6 +8,7 @@ import com.enm.whereToLive.entity.ClusterEntity;
 import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
 import com.enm.whereToLive.entity.LivingOpportunityEntityMySQLID;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
+import com.enm.whereToLive.exception.NoLivingOpportunitiesException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
@@ -33,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
+@DisplayName("단위테스트::서비스::WhereToLiveService")
 class WhereToLiveServiceTest {
 
     // Test 주체
@@ -81,8 +83,8 @@ class WhereToLiveServiceTest {
     }
 
     @Test
-    @DisplayName("멤버 생성 성공")
-    void createMemberSuccess() throws Exception, ClusterNotFoundException {
+    @DisplayName("getPlaceOpportunity::실제값 테스트")
+    void getPlaceOpportunity() throws Exception, ClusterNotFoundException {
 
         /*
         given
@@ -155,6 +157,68 @@ class WhereToLiveServiceTest {
         assertEquals(clusterEntity.getId(), destination.getName(), "Destination ID should match cluster ID");
         assertEquals(livingOpportunityEntityMySQLS.get(0).getLatitude(), destination.getLat(), "Destination latitude should match");
         assertEquals(livingOpportunityEntityMySQLS.get(0).getLongitude(), destination.getLng(), "Destination longitude should match");
+    }
+
+    @Test
+    @DisplayName("getPlaceOpportunity::클러스터 미발견 시 예외 발생")
+    void getPlaceOpportunity_ClusterNotFound() throws ClusterNotFoundException {
+        // given
+        double latitude = 37.545348562499996;
+        double longitude = 126.81842368750002;
+        int workdays = 5;
+
+        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .workdays(workdays)
+                .build();
+
+        // 클러스터를 찾을 수 없도록 설정
+        Mockito.when(clusterService.findClusterByCoordinates(latitude, longitude))
+                .thenThrow(new ClusterNotFoundException("Cluster not found"));
+
+        // when & then
+        assertThrows(ClusterNotFoundException.class, () -> {
+            whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
+        });
+    }
+
+    @Test
+    @DisplayName("getPlaceOpportunity::LivingOpportunity가 없는 경우")
+    void getPlaceOpportunity_NoLivingOpportunities() {
+        // given
+        double latitude = 37.545348562499996;
+        double longitude = 126.81842368750002;
+        int workdays = 5;
+
+        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .workdays(workdays)
+                .build();
+
+        ClusterEntity clusterEntity = ClusterEntity.builder()
+                .id("0-2-3")
+                .level(2)
+                .minLatitude(37.526483625)
+                .maxLatitude(37.5642135)
+                .minLongitude(126.79031112500002)
+                .maxLongitude(126.84653625000001)
+                .parentId("0-2")
+                .createdAt(LocalDateTime.parse(("2024-10-27T08:45:39.687480")))
+                .build();
+
+        Mockito.when(clusterService.findClusterByCoordinates(latitude, longitude)).thenReturn(clusterEntity);
+        // LivingOpportunity가 없도록 설정
+        Mockito.when(livingOpportunityRepository2.findByIdDestination(clusterEntity.getId())).thenReturn(Collections.emptyList());
+
+        // when & then
+        Exception exception = assertThrows(NoLivingOpportunitiesException.class, () -> {
+            whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
+        });
+
+        // 예외 메시지 확인 (선택 사항)
+        assertEquals("No living opportunities found for destination ID: " + clusterEntity.getId(), exception.getMessage());
     }
 
 }

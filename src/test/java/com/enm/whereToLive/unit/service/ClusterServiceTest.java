@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
+@DisplayName("단위테스트::서비스::ClusterService")
 class ClusterServiceTest {
 
     @InjectMocks
@@ -34,7 +35,7 @@ class ClusterServiceTest {
     }
 
     @Test
-    @DisplayName("클러스터가 존재하는 경우")
+    @DisplayName("findClusterIdByCoordinates::클러스터가 존재하는 경우")
     public void findClusterIdByCoordinates_ExistingCluster() throws ClusterNotFoundException {
         // Given
         double latitude = 37.5665; // 예시 위도
@@ -53,7 +54,7 @@ class ClusterServiceTest {
     }
 
     @Test
-    @DisplayName("클러스터가 존재하지 않는 경우")
+    @DisplayName("findClusterIdByCoordinates::클러스터가 존재하지 않는 경우")
     public void findClusterIdByCoordinates_NonExistingCluster() {
         // Given
         double latitude = 37.5665; // 예시 위도

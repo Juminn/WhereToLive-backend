@@ -3,6 +3,7 @@ package com.enm.whereToLive.service.impl;
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
 import com.enm.whereToLive.dto.OpportunityRequestDTO2;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
+import com.enm.whereToLive.exception.NoLivingOpportunitiesException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
 import com.enm.whereToLive.entity.ClusterEntity;
@@ -50,7 +51,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO) throws ClusterNotFoundException {
+    public OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO) {
         OpportunityResponseDTO opportunityResponseDTO = new OpportunityResponseDTO();
 
         ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(opportunityRequestDTO.getLatitude(), opportunityRequestDTO.getLongitude());
@@ -58,6 +59,12 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
         logger.info(clusterEntity.toString());
 
         List<LivingOpportunityEntityMySQL> livingOpportunities = livingOpportunityRepository2.findByIdDestination(clusterEntity.getId());
+
+        // livingOpportunities가 null이거나 비어있는 경우 예외를 던짐
+        if (livingOpportunities == null || livingOpportunities.isEmpty()) {
+            logger.warn("No living opportunities found for destination ID: " + clusterEntity.getId());
+            throw new NoLivingOpportunitiesException("No living opportunities found for destination ID: " + clusterEntity.getId());
+        }
 
         Destination destination = new Destination(clusterEntity.getId(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 

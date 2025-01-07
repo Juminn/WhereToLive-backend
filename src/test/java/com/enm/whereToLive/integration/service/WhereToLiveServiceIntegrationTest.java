@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@DisplayName("통합테스트::서비스::StationService")
 public class WhereToLiveServiceIntegrationTest {
 
     private final WhereToLiveService whereToLiveService;
@@ -23,7 +24,7 @@ public class WhereToLiveServiceIntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("기본")
+    @DisplayName("getPlaceOpportunity::실제 정상 케이스")
     void myTest() throws ClusterNotFoundException, Exception {
 
         /*

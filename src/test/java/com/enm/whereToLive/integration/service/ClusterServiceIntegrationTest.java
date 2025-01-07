@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@DisplayName("통합테스트::서비스::ClusterService")
 public class ClusterServiceIntegrationTest {
 
     private final ClusterService clusterService;
@@ -25,7 +26,7 @@ public class ClusterServiceIntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("기본")
+    @DisplayName("findClusterByCoordinates::실제 정상케이스")
     void myTest() throws ClusterNotFoundException, Exception {
 
         /*

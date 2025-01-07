@@ -18,12 +18,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DisplayName("통합테스트::컨트롤러::MainController")
 public class MainControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Get::/opportunity 통합테스트")
+    @DisplayName("Get::/opportunity::실제 정상케이스")
     public void testOpportunity() throws Exception {
         //IDT위치
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
@@ -54,7 +55,7 @@ public class MainControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Get::/opportunity2 통합테스트")
+    @DisplayName("Get::/opportunity2::실제 정상케이스")
     public void testOpportunity2() throws Exception {
 
         //IDT위치

@@ -64,7 +64,7 @@ public class MainControllerIntegrationTest {
                 .workdays(5)
                 .build();
 
-        mockMvc.perform(get("/opportunity")
+        mockMvc.perform(get("/opportunity2")
                         .param("company", opportunityRequestDTO2.getCompany())
                         .param("workdays", String.valueOf(opportunityRequestDTO2.getWorkdays()))
                         .contentType(MediaType.APPLICATION_JSON) )

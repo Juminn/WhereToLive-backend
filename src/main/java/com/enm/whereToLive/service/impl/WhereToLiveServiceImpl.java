@@ -109,6 +109,11 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
         return opportunityResponseDTO;
     }
 
+    @Override
+    public boolean isVaildWorkdays(int workdays) {
+        return workdays >= 0 && workdays <= 7;
+    }
+
     private List<LivingOpportunityEntityMySQL> calPlaceOpportunity(List<LivingOpportunityEntityMySQL> livingOpportunities, int workDays) {
         // PaginatedList를 ArrayList로 복사
         List<LivingOpportunityEntityMySQL> opportunityList = new ArrayList<>(livingOpportunities);

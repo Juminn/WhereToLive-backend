@@ -11,4 +11,6 @@ public interface WhereToLiveService {
     OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO);
 
     OpportunityResponseDTO2 getPlaceOpportunity2(OpportunityRequestDTO2 opportunityRequestDTO2);
+
+    boolean isVaildWorkdays(int workdays);
 }

@@ -10,6 +10,7 @@ import com.enm.whereToLive.service.BatchDabangAndManual;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,13 +45,13 @@ public class MainController {
     }
 
     @GetMapping("/opportunity")
-    public OpportunityResponseDTO opportunity(OpportunityRequestDTO opportunityRequestDTO) throws ClusterNotFoundException {
-        
+    public OpportunityResponseDTO opportunity(@Valid OpportunityRequestDTO opportunityRequestDTO) throws ClusterNotFoundException {
+
         return whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
     }
 
     @GetMapping("/opportunity2")
-    public OpportunityResponseDTO2 opportunity2(OpportunityRequestDTO2 opportunityRequestDTO2) {
+    public OpportunityResponseDTO2 opportunity2(@Valid OpportunityRequestDTO2 opportunityRequestDTO2) {
 
         return whereToLiveService.getPlaceOpportunity2(opportunityRequestDTO2);
     }

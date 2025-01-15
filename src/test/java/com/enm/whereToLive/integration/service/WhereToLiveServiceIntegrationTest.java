@@ -24,8 +24,8 @@ public class WhereToLiveServiceIntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("getPlaceOpportunity::실제 정상 케이스")
-    void myTest() throws ClusterNotFoundException, Exception {
+    @DisplayName("getPlaceOpportunity::정상케이스")
+    void myTest() {
 
         /*
         given

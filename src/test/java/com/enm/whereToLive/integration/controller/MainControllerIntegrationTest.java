@@ -24,7 +24,7 @@ public class MainControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("Get::/opportunity::실제 정상케이스")
+    @DisplayName("Get::/opportunity::정상케이스")
     public void testOpportunity() throws Exception {
         //IDT위치
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
@@ -55,7 +55,25 @@ public class MainControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("Get::/opportunity2::실제 정상케이스")
+    @DisplayName("Get::/opportunity::파라미터 비정상 케이스::workdays=8")
+    public void opportunityWithInvalidWorkdays() throws Exception {
+        //IDT위치
+        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
+                .latitude(37.545348562499996)
+                .longitude(126.81842368750002)
+                .workdays(8)
+                .build();
+
+        mockMvc.perform(get("/opportunity")
+                        .param("latitude", String.valueOf(opportunityRequestDTO.getLatitude()))
+                        .param("longitude", String.valueOf(opportunityRequestDTO.getLongitude()))
+                        .param("workdays", String.valueOf(opportunityRequestDTO.getWorkdays()))
+                        .contentType(MediaType.APPLICATION_JSON) )
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Get::/opportunity2::정상케이스")
     public void testOpportunity2() throws Exception {
 
         //IDT위치

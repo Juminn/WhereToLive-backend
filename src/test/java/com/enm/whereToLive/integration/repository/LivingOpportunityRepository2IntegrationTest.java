@@ -27,7 +27,7 @@ public class LivingOpportunityRepository2IntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("findByIdDestination::실제 정상케이스")
+    @DisplayName("findByIdDestination::정상케이스")
     void myTest() {
 
         /*

@@ -35,7 +35,7 @@ class ClusterServiceTest {
     }
 
     @Test
-    @DisplayName("findClusterIdByCoordinates::클러스터가 존재하는 경우")
+    @DisplayName("findClusterIdByCoordinates::정상케이스")
     public void findClusterIdByCoordinates_ExistingCluster() throws ClusterNotFoundException {
         // Given
         double latitude = 37.5665; // 예시 위도
@@ -54,11 +54,13 @@ class ClusterServiceTest {
     }
 
     @Test
-    @DisplayName("findClusterIdByCoordinates::클러스터가 존재하지 않는 경우")
+    @DisplayName("findClusterIdByCoordinates::clusterRepository 조회 null 케이스::Cluster 테이블")
     public void findClusterIdByCoordinates_NonExistingCluster() {
         // Given
         double latitude = 37.5665; // 예시 위도
         double longitude = 126.978; // 예시 경도
+
+        when(clusterRepository.findByIdAndStatusNot("3", ClusterEntity.Status.PENDING)).thenReturn(Optional.empty());
 
         // When/Then
         assertThrows(ClusterNotFoundException.class, () -> {

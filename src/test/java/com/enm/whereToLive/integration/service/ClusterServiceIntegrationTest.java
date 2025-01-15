@@ -26,7 +26,7 @@ public class ClusterServiceIntegrationTest {
 
     @Test
     @Transactional
-    @DisplayName("findClusterByCoordinates::실제 정상케이스")
+    @DisplayName("findClusterByCoordinates::정상케이스")
     void myTest() throws ClusterNotFoundException, Exception {
 
         /*

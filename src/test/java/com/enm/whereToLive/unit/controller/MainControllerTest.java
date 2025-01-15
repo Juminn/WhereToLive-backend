@@ -85,23 +85,19 @@ class MainControllerTest {
     }
 
     @Test
-    @DisplayName("Get::/opportunity::파라미터 workdays 비정상 케이스::8")
-    void opportunityWithInvalidWorkdays() throws Exception {
+    @DisplayName("Get::/opportunity::Exception 케이스::ClusterNotFoundException")
+    void opportunityWithException1() throws Exception {
         /*
         given
          */
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
                 .latitude(123.0)
                 .longitude(456.0)
-                .workdays(8)
+                .workdays(5)
                 .build();
 
-        OpportunityResponseDTO opportunityResponseDTO = OpportunityResponseDTO.builder()
-                .livingOpportunities(null)
-                .destination(null)
-                .build();
-
-        Mockito.when(whereToLiveService.getPlaceOpportunity(opportunityRequestDTO)).thenReturn(opportunityResponseDTO);
+        Mockito.when(whereToLiveService.getPlaceOpportunity(opportunityRequestDTO))
+                .thenThrow(new ClusterNotFoundException("Cluster not found"));
 
         /*
         when then
@@ -113,8 +109,7 @@ class MainControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(opportunityRequestDTO)))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

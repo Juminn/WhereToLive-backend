@@ -83,7 +83,7 @@ class WhereToLiveServiceTest {
     }
 
     @Test
-    @DisplayName("getPlaceOpportunity::실제값 테스트")
+    @DisplayName("getPlaceOpportunity::정상케이스")
     void getPlaceOpportunity() throws Exception, ClusterNotFoundException {
 
         /*
@@ -160,7 +160,7 @@ class WhereToLiveServiceTest {
     }
 
     @Test
-    @DisplayName("getPlaceOpportunity::클러스터 미발견 시 예외 발생")
+    @DisplayName("getPlaceOpportunity::clusterService Exception 케이스:ClusterNotFoundException")
     void getPlaceOpportunity_ClusterNotFound() throws ClusterNotFoundException {
         // given
         double latitude = 37.545348562499996;
@@ -184,7 +184,7 @@ class WhereToLiveServiceTest {
     }
 
     @Test
-    @DisplayName("getPlaceOpportunity::LivingOpportunity가 없는 경우")
+    @DisplayName("getPlaceOpportunity::livingOpportunityRepository2 조회 null 케이스::테이블 livingOpportunity")
     void getPlaceOpportunity_NoLivingOpportunities() {
         // given
         double latitude = 37.545348562499996;

@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -157,6 +156,26 @@ class WhereToLiveServiceTest {
         assertEquals(clusterEntity.getId(), destination.getName(), "Destination ID should match cluster ID");
         assertEquals(livingOpportunityEntityMySQLS.get(0).getLatitude(), destination.getLat(), "Destination latitude should match");
         assertEquals(livingOpportunityEntityMySQLS.get(0).getLongitude(), destination.getLng(), "Destination longitude should match");
+    }
+
+    @Test
+    @DisplayName("getPlaceOpportunity::파라미터 유효성 케이스::workdays::8")
+    void getPlaceOpportunity_BadParameter() throws ClusterNotFoundException {
+        // given
+        double latitude = 37.545348562499996;
+        double longitude = 126.81842368750002;
+        int workdays = 8;
+
+        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .workdays(workdays)
+                .build();
+
+        // when & then
+        assertThrows(IllegalArgumentException.class, () -> {
+            whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
+        });
     }
 
     @Test

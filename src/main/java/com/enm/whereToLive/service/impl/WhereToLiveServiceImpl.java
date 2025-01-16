@@ -2,7 +2,6 @@ package com.enm.whereToLive.service.impl;
 
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
 import com.enm.whereToLive.dto.OpportunityRequestDTO2;
-import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.exception.NoLivingOpportunitiesException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
@@ -18,6 +17,7 @@ import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import com.enm.whereToLive.api.dabang.service.DabangService;
 import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO) {
+    public OpportunityResponseDTO getPlaceOpportunity(@Valid OpportunityRequestDTO opportunityRequestDTO) {
         OpportunityResponseDTO opportunityResponseDTO = new OpportunityResponseDTO();
 
         ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(opportunityRequestDTO.getLatitude(), opportunityRequestDTO.getLongitude());
@@ -86,7 +86,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public OpportunityResponseDTO2 getPlaceOpportunity2(OpportunityRequestDTO2 opportunityRequestDTO2) {
+    public OpportunityResponseDTO2 getPlaceOpportunity2(@Valid OpportunityRequestDTO2 opportunityRequestDTO2) {
         OpportunityResponseDTO2 opportunityResponseDTO = new OpportunityResponseDTO2();
 
         List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(opportunityRequestDTO2.getCompany());

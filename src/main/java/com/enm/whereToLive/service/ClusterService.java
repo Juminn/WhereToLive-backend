@@ -1,9 +1,5 @@
 package com.enm.whereToLive.service;
 
-//import com.example.seoulclusters.model.Cluster;
-//import com.example.seoulclusters.model.NotFoundException;
-//import com.example.seoulclusters.repository.ClusterRepository;
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.enm.whereToLive.entity.ClusterEntity;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
@@ -12,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -34,18 +29,11 @@ public class ClusterService {
     private static final double LON_MIN = 126.734086;
     private static final double LON_MAX = 127.183887;
 
-    // 분할 대기 클러스터 큐
-    private Queue<ClusterEntity> clusterEntityQueue = new LinkedList<>();
-
     // 초기화 메소드
-    @PostConstruct
     public void initializeClusters() {
         if (clusterRepository.count() == 0) {
             generateInitialClusters();
         }
-
-        List<ClusterEntity> pendingClusterEntities = clusterRepository.findByStatusOrderByLevelAsc(ClusterEntity.Status.PENDING);
-        //clusterQueue.addAll(pendingClusters);
     }
 
     //@PostConstruct

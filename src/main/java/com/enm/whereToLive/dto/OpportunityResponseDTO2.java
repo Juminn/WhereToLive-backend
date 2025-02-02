@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class opportunityResponseDTO2 {
+public class OpportunityResponseDTO2 {
     Destination destination;
     List<LivingOpportunityEntityDynamo> livingOpportunities;
 }

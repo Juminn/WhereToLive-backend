@@ -1,11 +1,16 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.dto.opportunityResponseDTO;
-import com.enm.whereToLive.dto.opportunityResponseDTO2;
+import com.enm.whereToLive.dto.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.OpportunityRequestDTO2;
+import com.enm.whereToLive.dto.OpportunityResponseDTO;
+import com.enm.whereToLive.dto.OpportunityResponseDTO2;
+import com.enm.whereToLive.exception.ClusterNotFoundException;
 
 public interface WhereToLiveService {
 
-    opportunityResponseDTO getPlaceOpportunity(double latitude, Double longitude, int workDays) throws Exception;
+    OpportunityResponseDTO getPlaceOpportunity(OpportunityRequestDTO opportunityRequestDTO);
 
-    opportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays);
+    OpportunityResponseDTO2 getPlaceOpportunity2(OpportunityRequestDTO2 opportunityRequestDTO2);
+
+    boolean isVaildWorkdays(int workdays);
 }

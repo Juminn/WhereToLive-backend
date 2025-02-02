@@ -10,8 +10,7 @@ import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,8 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
-public class BatchProcessingService {
+@Slf4j
+public class BatchClusterAndAuto {
 
     @Autowired
     private ClusterService clusterService;
@@ -36,11 +36,10 @@ public class BatchProcessingService {
     @Autowired
     private StationService stationService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
-
     // 매일 자정에 실행
     //@Scheduled(cron = "0 0 0 * * *")
     //@PostConstruct
+    //@EventListener(ApplicationReadyEvent.class)
     public void processDailyClusters() throws Exception {
 
         while (true) {
@@ -53,7 +52,7 @@ public class BatchProcessingService {
                 optionalNewCluster = clusterRepository.findFirstByStatus(ClusterEntity.Status.PENDING);
             }
             if (optionalNewCluster.isEmpty()){
-                logger.info("No PENDING Cluster, so Generate Cluster");
+                log.info("No PENDING Cluster, so Generate Cluster");
 
                 // 클러스터 분할 및 생성
                 clusterService.generateDailyClusters();
@@ -78,7 +77,7 @@ public class BatchProcessingService {
         }
     }
 
-    public ArrayList<Station> batchMakeOpportunity(Destination destination) throws Exception {
+    public ArrayList<Station> batchMakeOpportunity(Destination destination) {
         ArrayList<Station> stationList = stationService.getAllStations();
 
         //String stationsRental = getStationsRental(stationList);
@@ -100,7 +99,7 @@ public class BatchProcessingService {
                 int monthlyRent = station.getMontlyRent().intValue();
                 int monthlyTotalOpportunity = monthlyGoingWorkOpportunity + monthlyRent;
 
-                System.out.println("stationID: " + station.getId() +
+                log.info("stationID: " + station.getId() +
                         "totalOpportunity: " + monthlyTotalOpportunity +
                         " monthlyGoingWorkOpportunity: " + monthlyGoingWorkOpportunity +
                         " monthlyRent: " + monthlyRent +

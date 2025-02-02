@@ -1,19 +1,23 @@
 package com.enm.whereToLive.service.impl;
 
+import com.enm.whereToLive.dto.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.OpportunityRequestDTO2;
+import com.enm.whereToLive.exception.NoLivingOpportunitiesException;
 import com.enm.whereToLive.model.Destination;
 import com.enm.whereToLive.model.Station;
 import com.enm.whereToLive.entity.ClusterEntity;
 import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
 import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
-import com.enm.whereToLive.dto.opportunityResponseDTO;
-import com.enm.whereToLive.dto.opportunityResponseDTO2;
+import com.enm.whereToLive.dto.OpportunityResponseDTO;
+import com.enm.whereToLive.dto.OpportunityResponseDTO2;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.ClusterService;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import com.enm.whereToLive.api.dabang.service.DabangService;
 import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,16 +51,20 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public opportunityResponseDTO getPlaceOpportunity(double latitude, Double longitude, int workDays) {
-        opportunityResponseDTO opportunityResponseDTO = new opportunityResponseDTO();
+    public OpportunityResponseDTO getPlaceOpportunity(@Valid OpportunityRequestDTO opportunityRequestDTO) {
+        OpportunityResponseDTO opportunityResponseDTO = new OpportunityResponseDTO();
 
-        ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(latitude, longitude);
+        ClusterEntity clusterEntity = clusterService.findClusterByCoordinates(opportunityRequestDTO.getLatitude(), opportunityRequestDTO.getLongitude());
 
         logger.info(clusterEntity.toString());
 
         List<LivingOpportunityEntityMySQL> livingOpportunities = livingOpportunityRepository2.findByIdDestination(clusterEntity.getId());
 
-
+        // livingOpportunities가 null이거나 비어있는 경우 예외를 던짐
+        if (livingOpportunities == null || livingOpportunities.isEmpty()) {
+            logger.warn("No living opportunities found for destination ID: " + clusterEntity.getId());
+            throw new NoLivingOpportunitiesException("No living opportunities found for destination ID: " + clusterEntity.getId());
+        }
 
         Destination destination = new Destination(clusterEntity.getId(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 
@@ -69,7 +77,7 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
             livingOpportunity.setCons(station.getCons());
         }
 
-        livingOpportunities = calPlaceOpportunity(livingOpportunities, workDays);
+        livingOpportunities = calPlaceOpportunity(livingOpportunities, opportunityRequestDTO.getWorkdays());
 
         opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
         opportunityResponseDTO.setDestination(destination);
@@ -78,11 +86,11 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
     }
 
     @Override
-    public opportunityResponseDTO2 getPlaceOpportunity2(String name, int workDays) {
-        opportunityResponseDTO2 opportunityResponseDTO = new opportunityResponseDTO2();
+    public OpportunityResponseDTO2 getPlaceOpportunity2(@Valid OpportunityRequestDTO2 opportunityRequestDTO2) {
+        OpportunityResponseDTO2 opportunityResponseDTO = new OpportunityResponseDTO2();
 
-        List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(name);
-        Destination destination = new Destination(name, livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
+        List<LivingOpportunityEntityDynamo> livingOpportunities = livingOpportunityRepository.findByDestination(opportunityRequestDTO2.getCompany());
+        Destination destination = new Destination(opportunityRequestDTO2.getCompany(), livingOpportunities.get(0).getLatitude(), livingOpportunities.get(0).getLongitude());
 
         for(LivingOpportunityEntityDynamo livingOpportunityEntityDynamo : livingOpportunities) {
             Station station = stationService.getStationById(livingOpportunityEntityDynamo.getStationID());
@@ -93,12 +101,17 @@ public class WhereToLiveServiceImpl implements WhereToLiveService {
             livingOpportunityEntityDynamo.setCons(station.getCons());
         }
 
-        livingOpportunities = calPlaceOpportunity2(livingOpportunities, workDays);
+        livingOpportunities = calPlaceOpportunity2(livingOpportunities, opportunityRequestDTO2.getWorkdays());
 
         opportunityResponseDTO.setLivingOpportunities(livingOpportunities);
         opportunityResponseDTO.setDestination(destination);
 
         return opportunityResponseDTO;
+    }
+
+    @Override
+    public boolean isVaildWorkdays(int workdays) {
+        return workdays >= 0 && workdays <= 7;
     }
 
     private List<LivingOpportunityEntityMySQL> calPlaceOpportunity(List<LivingOpportunityEntityMySQL> livingOpportunities, int workDays) {

@@ -1,30 +1,27 @@
 package com.enm.whereToLive.service;
 
-//import com.example.seoulclusters.model.Cluster;
-//import com.example.seoulclusters.model.NotFoundException;
-//import com.example.seoulclusters.repository.ClusterRepository;
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import jakarta.annotation.PostConstruct;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Slf4j
 public class ClusterService {
 
+    ClusterRepository clusterRepository;
+
     @Autowired
-    private ClusterRepository clusterRepository;
-
+    public ClusterService(ClusterRepository clusterRepository) {
+        this.clusterRepository = clusterRepository;
+    }
     private static final int MAX_LEVEL = 10;
-
-    private static final Logger logger = LoggerFactory.getLogger(ClusterService.class);
 
     // 서울의 위도와 경도 범위
     private static final double LAT_MIN = 37.413294;
@@ -32,22 +29,15 @@ public class ClusterService {
     private static final double LON_MIN = 126.734086;
     private static final double LON_MAX = 127.183887;
 
-    // 분할 대기 클러스터 큐
-    private Queue<ClusterEntity> clusterEntityQueue = new LinkedList<>();
-
     // 초기화 메소드
-    @PostConstruct
     public void initializeClusters() {
         if (clusterRepository.count() == 0) {
             generateInitialClusters();
         }
-
-        List<ClusterEntity> pendingClusterEntities = clusterRepository.findByStatusOrderByLevelAsc(ClusterEntity.Status.PENDING);
-        //clusterQueue.addAll(pendingClusters);
     }
 
     //@PostConstruct
-    public void test() {
+    public void test() throws ClusterNotFoundException {
         //1-3-1-0-2 37.49818621875,127.127661875 non split
         getOpportunityCostByCoordinates(37.49818621875,127.127661875);
         getOpportunityCostByCoordinates(37.49818621876,127.127661876);
@@ -122,7 +112,7 @@ public class ClusterService {
         ClusterEntity parentClusterEntity;
 
         if (optionalParentCluster.isEmpty()){
-            logger.error("No CAL_COMPLETED Cluster");
+            log.error("No CAL_COMPLETED Cluster");
             return;
         }
         else {
@@ -196,21 +186,20 @@ public class ClusterService {
     }
 
     //좌표로 클러스터 찾기
-    public ClusterEntity findClusterByCoordinates(double latitude, double longitude) {
+    public ClusterEntity findClusterByCoordinates(double latitude, double longitude) throws ClusterNotFoundException {
         String clusterId = findClusterIdByCoordinates(latitude, longitude);
         ClusterEntity clusterEntity = clusterRepository.findById(clusterId).orElse(null);
         if (clusterEntity != null) {
             return clusterEntity;
         } else {
-            logger.error("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
-            throw new NotFoundException("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
+            log.error("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
+            throw new ClusterNotFoundException("해당 좌표에 대한 클러스터를 찾을 수 없습니다.");
         }
 
     }
 
     // 좌표로 클러스터 ID찾기
-    public String findClusterIdByCoordinates(double latitude, double longitude) {
-//        long clusterId = 0;
+    public String findClusterIdByCoordinates(double latitude, double longitude) throws ClusterNotFoundException {
         String clusterId = "";
         int level = 0;
 
@@ -218,8 +207,6 @@ public class ClusterService {
         double maxLat = LAT_MAX;
         double minLon = LON_MIN;
         double maxLon = LON_MAX;
-
-        //Cluster cluster = null;
 
         while (level <= MAX_LEVEL) {
             double midLat = (minLat + maxLat) / 2;
@@ -234,6 +221,11 @@ public class ClusterService {
 
             Optional<ClusterEntity> clusterOpt = clusterRepository.findByIdAndStatusNot(clusterId, ClusterEntity.Status.PENDING);
             if (clusterOpt.isEmpty()) {
+                // 클러스터가 존재하지 않으면 예외를 던짐
+                if (level == 0) {
+                    throw new ClusterNotFoundException("클러스터가 존재하지 않습니다: " + clusterId);
+                }
+
                 // 존재하지 않으면 이전 레벨의 클러스터 ID 반환
                 return clusterId.substring(0, clusterId.lastIndexOf('-'));
             }
@@ -256,59 +248,16 @@ public class ClusterService {
 
             level++;
 
-//            int quadrant = 0;
-//            if (latitude >= midLat) {
-//                quadrant |= 2; // 위쪽
-//                minLat = midLat;
-//            } else {
-//                maxLat = midLat;
-//            }
-//
-//            if (longitude >= midLon) {
-//                quadrant |= 1; // 오른쪽
-//                minLon = midLon;
-//            } else {
-//                maxLon = midLon;
-//            }
-//
-//            clusterId = (clusterId << 2) | quadrant;
-//            level++;
-//
-//            // 클러스터 조회
-//            cluster = clusterRepository.findById(clusterId).orElse(null);
-//
-//            if (cluster != null) {
-//                if (cluster.getLevel() == level) {
-//                    // 가장 상세한 클러스터를 찾음
-//                    return cluster;
-//                }
-//            } else {
-//                // 클러스터가 아직 생성되지 않았으면 상위 클러스터 반환
-//                clusterId >>= 2;
-//                level--;
-//                return clusterRepository.findById(clusterId).orElse(null);
-//            }
-//
-//            // 최대 수준에 도달하면 종료
-//            if (level >= getCurrentMaxLevel()) {
-//                break;
-//            }
         }
 
         return clusterId;
     }
 
-    // 현재 최대 분할 수준 반환
-    private int getCurrentMaxLevel() {
-        Integer maxLevel = clusterRepository.findMaxLevel();
-        return maxLevel != null ? maxLevel : 0;
-    }
-
     // 좌표를 기반으로 기회 비용을 조회하는 메소드
-    public double getOpportunityCostByCoordinates(double latitude, double longitude) {
+    public double getOpportunityCostByCoordinates(double latitude, double longitude) throws ClusterNotFoundException {
         ClusterEntity clusterEntity = findClusterByCoordinates(latitude, longitude);
         if (clusterEntity != null) {
-            logger.info(clusterEntity.toString());
+            log.info(clusterEntity.toString());
             return 0;
         } else {
             throw new RuntimeException("해당 좌표에 대한 기회 비용을 찾을 수 없습니다.");

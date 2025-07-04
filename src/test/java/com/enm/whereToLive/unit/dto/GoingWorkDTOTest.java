@@ -1,13 +1,16 @@
 package com.enm.whereToLive.unit.dto;
 
 import com.enm.whereToLive.dto.GoingWorkDTO;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("단위테스트::DTO::GoingWorkDTO")
 class GoingWorkDTOTest {
 
     @Test
+    @DisplayName("생성")
     public void create() {
         // Given
         GoingWorkDTO goingWorkDTO = GoingWorkDTO.builder()
@@ -22,6 +25,7 @@ class GoingWorkDTOTest {
     }
 
     @Test
+    @DisplayName("All Args 생성")
     public void allArgsConstructor() {
         // Given
         int cost = 1000;
@@ -36,6 +40,7 @@ class GoingWorkDTOTest {
     }
 
     @Test
+    @DisplayName("No Args 생성")
     public void noArgsConstructorAndSetters() {
         // Given
         GoingWorkDTO dto = new GoingWorkDTO();
@@ -50,6 +55,7 @@ class GoingWorkDTOTest {
     }
 
     @Test
+    @DisplayName("toString")
     public void ToString() {
         // Given
         GoingWorkDTO dto = new GoingWorkDTO(1000, 30);

@@ -10,13 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OpportunityRequestDTO {
+public class OpportunityRequestDTO2 {
 
-    @NotNull(message = "위도 필수")
-    Double latitude;
-
-    @NotNull(message = "경도 필수")
-    Double longitude;
+    @NotBlank(message = "회사이름 필수")
+    String company;
 
     @Min(value = 0, message = "근무일수 최소 0일")
     @Max(value = 7, message = "근무일수 최대 7일")

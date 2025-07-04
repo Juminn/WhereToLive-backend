@@ -4,12 +4,13 @@ import com.enm.whereToLive.controller.MainController;
 import com.enm.whereToLive.dto.OpportunityRequestDTO;
 import com.enm.whereToLive.dto.OpportunityResponseDTO;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
-import com.enm.whereToLive.service.BatchServiceOld;
+import com.enm.whereToLive.service.BatchDabangAndManual;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @WebMvcTest(MainController.class)
+@DisplayName("단위테스트::컨트롤러::MainController")
 class MainControllerTest {
 
     @Autowired
     MockMvc mvc;
 
     @MockBean
-    private BatchServiceOld batchService;
+    private BatchDabangAndManual batchService;
 
     @MockBean
     private WhereToLiveService whereToLiveService;
@@ -52,14 +50,17 @@ class MainControllerTest {
     }
     
     @Test
-    void opportunity() throws ClusterNotFoundException, Exception {
+    @DisplayName("Get::/opportunity::정상 케이스")
+    void opportunity() throws Exception {
         /*
         given
          */
+        int workdays = 5;
+
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
-                .latitude(123)
-                .longitude(456)
-                .workDays(5)
+                .latitude(123.0)
+                .longitude(456.0)
+                .workdays(workdays)
                 .build();
 
         OpportunityResponseDTO opportunityResponseDTO = OpportunityResponseDTO.builder()
@@ -73,17 +74,42 @@ class MainControllerTest {
         when then
          */
         mvc.perform(MockMvcRequestBuilders.get("/opportunity")
+                        .param("latitude", String.valueOf(opportunityRequestDTO.getLatitude()))
+                        .param("longitude", String.valueOf(opportunityRequestDTO.getLongitude()))
+                        .param("workdays", String.valueOf(opportunityRequestDTO.getWorkdays()))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(opportunityRequestDTO)))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.livingOpportunities").isEmpty()) // livingOpportunities가 null이므로 비어있어야 함
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.destination").isEmpty()); // destination이 null이므로 비어있어야 함
 
     }
 
     @Test
-    void opportunity2() {
+    @DisplayName("Get::/opportunity::Exception 케이스::ClusterNotFoundException")
+    void opportunityWithException1() throws Exception {
+        /*
+        given
+         */
+        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
+                .latitude(123.0)
+                .longitude(456.0)
+                .workdays(5)
+                .build();
+
+        Mockito.when(whereToLiveService.getPlaceOpportunity(opportunityRequestDTO))
+                .thenThrow(new ClusterNotFoundException("Cluster not found"));
+
+        /*
+        when then
+         */
+        mvc.perform(MockMvcRequestBuilders.get("/opportunity")
+                        .param("latitude", String.valueOf(opportunityRequestDTO.getLatitude()))
+                        .param("longitude", String.valueOf(opportunityRequestDTO.getLongitude()))
+                        .param("workdays", String.valueOf(opportunityRequestDTO.getWorkdays()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(opportunityRequestDTO)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

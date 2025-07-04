@@ -6,11 +6,13 @@ import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.service.WhereToLiveService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@DisplayName("통합테스트::서비스::StationService")
 public class WhereToLiveServiceIntegrationTest {
 
     private final WhereToLiveService whereToLiveService;
@@ -22,7 +24,8 @@ public class WhereToLiveServiceIntegrationTest {
 
     @Test
     @Transactional
-    void myTest() throws ClusterNotFoundException, Exception {
+    @DisplayName("getPlaceOpportunity::정상케이스")
+    void myTest() {
 
         /*
         given
@@ -31,7 +34,7 @@ public class WhereToLiveServiceIntegrationTest {
         OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
                 .latitude(37.545348562499996)
                 .longitude(126.81842368750002)
-                .workDays(5)
+                .workdays(5)
                 .build();
 
         /*

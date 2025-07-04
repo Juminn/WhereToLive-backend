@@ -8,11 +8,13 @@ import com.enm.whereToLive.service.ClusterService;
 import com.enm.whereToLive.service.WhereToLiveService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@DisplayName("통합테스트::서비스::ClusterService")
 public class ClusterServiceIntegrationTest {
 
     private final ClusterService clusterService;
@@ -24,6 +26,7 @@ public class ClusterServiceIntegrationTest {
 
     @Test
     @Transactional
+    @DisplayName("findClusterByCoordinates::정상케이스")
     void myTest() throws ClusterNotFoundException, Exception {
 
         /*

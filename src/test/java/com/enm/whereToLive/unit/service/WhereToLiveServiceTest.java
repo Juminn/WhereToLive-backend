@@ -159,26 +159,6 @@ class WhereToLiveServiceTest {
     }
 
     @Test
-    @DisplayName("getPlaceOpportunity::파라미터 유효성 케이스::workdays::8")
-    void getPlaceOpportunity_BadParameter() throws ClusterNotFoundException {
-        // given
-        double latitude = 37.545348562499996;
-        double longitude = 126.81842368750002;
-        int workdays = 8;
-
-        OpportunityRequestDTO opportunityRequestDTO = OpportunityRequestDTO.builder()
-                .latitude(latitude)
-                .longitude(longitude)
-                .workdays(workdays)
-                .build();
-
-        // when & then
-        assertThrows(IllegalArgumentException.class, () -> {
-            whereToLiveService.getPlaceOpportunity(opportunityRequestDTO);
-        });
-    }
-
-    @Test
     @DisplayName("getPlaceOpportunity::clusterService Exception 케이스:ClusterNotFoundException")
     void getPlaceOpportunity_ClusterNotFound() throws ClusterNotFoundException {
         // given

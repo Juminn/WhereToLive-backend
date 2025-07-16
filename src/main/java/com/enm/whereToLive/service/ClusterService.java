@@ -1,9 +1,8 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.domain.entity.ClusterEntity;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

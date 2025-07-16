@@ -1,11 +1,10 @@
 package com.enm.whereToLive.controller;
 
-import com.enm.whereToLive.dto.OpportunityRequestDTO;
-import com.enm.whereToLive.dto.OpportunityRequestDTO2;
+import com.enm.whereToLive.dto.request.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.request.OpportunityRequestDTO2;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
-import com.enm.whereToLive.dto.OpportunityResponseDTO;
-import com.enm.whereToLive.dto.OpportunityResponseDTO2;
-import com.enm.whereToLive.exception.NoLivingOpportunitiesException;
+import com.enm.whereToLive.dto.response.OpportunityResponseDTO;
+import com.enm.whereToLive.dto.response.OpportunityResponseDTO2;
 import com.enm.whereToLive.service.BatchDabangAndManual;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.TestService;

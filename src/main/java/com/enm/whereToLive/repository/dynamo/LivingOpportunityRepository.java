@@ -1,7 +1,7 @@
 package com.enm.whereToLive.repository.dynamo;
 
-import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
-import com.enm.whereToLive.entity.LivingOpportunityEntityDynamoID;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityDynamoID;
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan;
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,6 +1,6 @@
 package com.enm.whereToLive.unit;
 
-import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityMySQL;
 
 
 public class TestHelper {

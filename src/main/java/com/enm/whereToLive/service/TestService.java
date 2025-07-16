@@ -1,8 +1,8 @@
 package com.enm.whereToLive.service;
 
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
-import com.enm.whereToLive.api.dabang.service.DabangService;
-import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
+import com.enm.whereToLive.external.dabang.service.DabangService;
+import com.enm.whereToLive.external.whenToGo.service.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,6 @@
 package com.enm.whereToLive.integration.repository;
 
-import com.enm.whereToLive.dto.OpportunityRequestDTO;
-import com.enm.whereToLive.entity.ClusterEntity;
-import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
-import com.enm.whereToLive.exception.ClusterNotFoundException;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityMySQL;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;

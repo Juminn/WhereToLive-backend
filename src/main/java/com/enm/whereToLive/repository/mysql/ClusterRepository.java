@@ -1,6 +1,6 @@
 package com.enm.whereToLive.repository.mysql;
 
-import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.domain.entity.ClusterEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

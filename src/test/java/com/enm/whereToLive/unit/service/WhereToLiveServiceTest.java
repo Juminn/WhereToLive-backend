@@ -1,16 +1,16 @@
 package com.enm.whereToLive.unit.service;
 
-import com.enm.whereToLive.api.dabang.service.DabangService;
-import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
-import com.enm.whereToLive.dto.OpportunityRequestDTO;
-import com.enm.whereToLive.dto.OpportunityResponseDTO;
-import com.enm.whereToLive.entity.ClusterEntity;
-import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
-import com.enm.whereToLive.entity.LivingOpportunityEntityMySQLID;
+import com.enm.whereToLive.external.dabang.service.DabangService;
+import com.enm.whereToLive.external.whenToGo.service.WhenToGoService;
+import com.enm.whereToLive.dto.request.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.response.OpportunityResponseDTO;
+import com.enm.whereToLive.domain.entity.ClusterEntity;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityMySQL;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityMySQLID;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.exception.NoLivingOpportunitiesException;
-import com.enm.whereToLive.model.Destination;
-import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.dto.Destination;
+import com.enm.whereToLive.dto.Station;
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.service.ClusterService;

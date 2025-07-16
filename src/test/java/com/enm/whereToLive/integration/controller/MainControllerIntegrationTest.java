@@ -1,7 +1,7 @@
 package com.enm.whereToLive.integration.controller;
 
-import com.enm.whereToLive.dto.OpportunityRequestDTO;
-import com.enm.whereToLive.dto.OpportunityRequestDTO2;
+import com.enm.whereToLive.dto.request.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.request.OpportunityRequestDTO2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

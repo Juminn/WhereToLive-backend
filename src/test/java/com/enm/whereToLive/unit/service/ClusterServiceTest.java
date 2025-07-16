@@ -1,6 +1,6 @@
 package com.enm.whereToLive.unit.service;
 
-import com.enm.whereToLive.entity.ClusterEntity;
+import com.enm.whereToLive.domain.entity.ClusterEntity;
 import com.enm.whereToLive.exception.ClusterNotFoundException;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import com.enm.whereToLive.service.ClusterService;

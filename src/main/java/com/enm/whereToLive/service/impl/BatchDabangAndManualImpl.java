@@ -1,14 +1,14 @@
 package com.enm.whereToLive.service.impl;
 
-import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.dto.Destination;
 import com.enm.whereToLive.dto.GoingWorkDTO;
-import com.enm.whereToLive.model.Station;
-import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.dto.Station;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.dynamo.LivingOpportunityRepository;
 import com.enm.whereToLive.service.StationService;
 import com.enm.whereToLive.service.BatchDabangAndManual;
-import com.enm.whereToLive.api.dabang.service.DabangService;
-import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
+import com.enm.whereToLive.external.dabang.service.DabangService;
+import com.enm.whereToLive.external.whenToGo.service.WhenToGoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

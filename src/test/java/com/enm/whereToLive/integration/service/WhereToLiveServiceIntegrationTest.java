@@ -1,8 +1,7 @@
 package com.enm.whereToLive.integration.service;
 
-import com.enm.whereToLive.dto.OpportunityRequestDTO;
-import com.enm.whereToLive.dto.OpportunityResponseDTO;
-import com.enm.whereToLive.exception.ClusterNotFoundException;
+import com.enm.whereToLive.dto.request.OpportunityRequestDTO;
+import com.enm.whereToLive.dto.response.OpportunityResponseDTO;
 import com.enm.whereToLive.service.WhereToLiveService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;

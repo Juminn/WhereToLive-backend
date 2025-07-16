@@ -1,7 +1,7 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.model.Destination;
-import com.enm.whereToLive.model.Station;
+import com.enm.whereToLive.dto.Destination;
+import com.enm.whereToLive.dto.Station;
 
 import java.util.ArrayList;
 

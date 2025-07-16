@@ -1,15 +1,15 @@
 package com.enm.whereToLive.service;
 
-import com.enm.whereToLive.model.Destination;
+import com.enm.whereToLive.dto.Destination;
 import com.enm.whereToLive.dto.GoingWorkDTO;
-import com.enm.whereToLive.model.Station;
-import com.enm.whereToLive.entity.ClusterEntity;
-import com.enm.whereToLive.entity.LivingOpportunityEntityMySQL;
-import com.enm.whereToLive.entity.LivingOpportunityEntityMySQLID;
-import com.enm.whereToLive.entity.LivingOpportunityEntityDynamo;
+import com.enm.whereToLive.dto.Station;
+import com.enm.whereToLive.domain.entity.ClusterEntity;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityMySQL;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityMySQLID;
+import com.enm.whereToLive.domain.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
-import com.enm.whereToLive.api.whenToGo.service.WhenToGoService;
+import com.enm.whereToLive.external.whenToGo.service.WhenToGoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

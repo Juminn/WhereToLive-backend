@@ -24,6 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://d1y6ebwgoivo5n.cloudfront.net",
                         "https://www.d1y6ebwgoivo5n.cloudfront.net",
                         "http://www.d1y6ebwgoivo5n.cloudfront.net",
+                        "http://dnupa81k4z4ud.cloudfront.net",
+                        "https://dnupa81k4z4ud.cloudfront.net",
 
                         "https://xn--hl0bp2k97kmsecuco0oo8m.com",
                         "http://xn--hl0bp2k97kmsecuco0oo8m.com",

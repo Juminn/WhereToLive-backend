@@ -30,7 +30,8 @@ public class WhenToGoApiClient {
         this.webClient = WebClient.builder()
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .filter(logRequest())
-                .baseUrl("https://api.xn--ih3bt9oq0b6yi50k.com")
+                //.baseUrl("https://api.xn--w39a06bmycv8qzokvne.com")
+                .baseUrl("http://localhost:9090")
                 .build();
     }
 
@@ -57,6 +58,9 @@ public class WhenToGoApiClient {
                             .flatMap(errorBody -> Mono.error(new ResponseStatusException(clientResponse.statusCode(), errorBody)));
                 })
                 .bodyToMono(WhenToGoResponseDTO.class)
+                .doOnNext(response ->
+                        log.info("WhenToGoApiClient success response: {}", response)
+                )
                 .block();
 
     }

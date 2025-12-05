@@ -10,6 +10,7 @@ import com.enm.whereToLive.domain.entity.LivingOpportunityEntityDynamo;
 import com.enm.whereToLive.repository.mysql.ClusterRepository;
 import com.enm.whereToLive.repository.mysql.LivingOpportunityRepository2;
 import com.enm.whereToLive.external.whenToGo.service.WhenToGoService;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,8 @@ public class BatchClusterAndAuto {
     //@PostConstruct
     //@EventListener(ApplicationReadyEvent.class)
     public void processDailyClusters() throws Exception {
+
+        clusterService.initializeClusters();
 
         while (true) {
             // 진행 중 종료된 클러스터 가져오기

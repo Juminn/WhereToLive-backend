@@ -22,11 +22,11 @@ public class ClusterService {
     }
     private static final int MAX_LEVEL = 10;
 
-    // 서울의 위도와 경도 범위
-    private static final double LAT_MIN = 37.413294;
-    private static final double LAT_MAX = 37.715133;
-    private static final double LON_MIN = 126.734086;
-    private static final double LON_MAX = 127.183887;
+    // 경기도권의 위도와 경도 범위
+    private static final double LAT_MIN = 36.87226;
+    private static final double LAT_MAX = 38.300603;
+    private static final double LON_MIN = 126.262021;
+    private static final double LON_MAX = 127.830532;
 
     // 초기화 메소드
     public void initializeClusters() {

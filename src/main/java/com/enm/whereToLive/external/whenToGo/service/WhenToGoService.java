@@ -1,17 +1,20 @@
 package com.enm.whereToLive.external.whenToGo.service;
 
+import com.enm.whereToLive.external.whenToGo.Utils.TimeUtils;
 import com.enm.whereToLive.external.whenToGo.external.WhenToGoApiClient;
 import com.enm.whereToLive.dto.Destination;
 import com.enm.whereToLive.dto.GoingWorkDTO;
 import com.enm.whereToLive.dto.Station;
 import com.enm.whereToLive.external.whenToGo.dto.WhenToGoRequestDTO;
 import com.enm.whereToLive.external.whenToGo.dto.WhenToGoResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
 public class WhenToGoService {
     private WhenToGoApiClient whenToGoApiClient;
 
@@ -26,8 +29,8 @@ public class WhenToGoService {
         double startY = station.getLatitude();
         double goalX = destination.getLng();
         double goalY = destination.getLat();
-        String startTime = "2024-08-01T08:00";
-        String endTime = "2024-08-01T08:00"; //수정필요
+        String startTime = TimeUtils.last8AMString();
+        String endTime = TimeUtils.last8AMString(); //수정필요
         int transferCost = 2000;
         int subwayCost = 5000;
         int busCost = 7000;
@@ -41,7 +44,7 @@ public class WhenToGoService {
             goingWorkDTO.setCost(whenToGoResponseDTO.getMinCost());
             goingWorkDTO.setDuration(whenToGoResponseDTO.getMinDuration());
         } catch (ResponseStatusException e) {
-            System.out.println(e);
+            log.error(String.valueOf(e));
             //500미터 보다 범위가 작은 경우 리턴을 못받기때문에 예외처리
             double distance = calculateDistance(startY, startX, goalY, goalX);
             if (e.getStatusCode() == HttpStatus.BAD_REQUEST && distance < 500) {

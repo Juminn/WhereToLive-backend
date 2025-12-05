@@ -15,20 +15,22 @@ public class TestService {
     private WhenToGoService whenToGoService;
     private LivingOpportunityRepository livingOpportunityRepository;
 
+    private BatchClusterAndAuto batchClusterAndAuto;
+
     @Autowired
-    public TestService(StationService stationService, DabangService dabangService, WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository, BatchDabangAndManual batchDabangAndManual) {
+    public TestService(StationService stationService, DabangService dabangService, WhenToGoService whenToGoService, LivingOpportunityRepository livingOpportunityRepository, BatchDabangAndManual batchDabangAndManual, BatchClusterAndAuto batchClusterAndAuto) {
         this.stationService = stationService;
         this.dabangService = dabangService;
         this.whenToGoService = whenToGoService;
         this.livingOpportunityRepository = livingOpportunityRepository;
         this.batchDabangAndManual = batchDabangAndManual;
+        this.batchClusterAndAuto = batchClusterAndAuto;
     }
 
 
     public void test() throws Exception {
 
-        //수동배치 테스트
-        //batchDabangAndManual.batchMakeOpportunity(new Destination("현대오토에버", 37.5113373,127.0665525));
+        batchClusterAndAuto.processDailyClusters();
 
         System.out.println("complete");
     }
